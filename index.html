@@ -112,7 +112,7 @@
       <label for="engramLevel">عدد المستويات التي تريد لها إنقرامز:</label>
       <input type="number" id="engramLevel" placeholder="مثلاً 150" max="1000">
       <button onclick="generateEngrams()">توليد كود الإنقرامز فقط</button>
-      <textarea id="engramCode" readonly placeholder="كود الإنقرامز سيظهر هنا..." rows="5"></textarea>
+      <textarea id="engramCode" readonly placeholder="كود الإنقرامز سيظهر هنا..." rows="10"></textarea>
       <button class="copy-button" onclick="copyEngrams()">📋 نسخ الإنقرامز</button>
     </section>
   </div>
@@ -161,8 +161,28 @@
         alert("يرجى إدخال مستوى صالح للإنقرامز (1 - 1000)");
         return;
       }
-      const code = "OverridePlayerLevelEngramPoints=" + Array(level).fill(10).join(",");
-      document.getElementById("engramCode").value = code;
+
+      let result = "";
+      for (let i = 0; i < level; i++) {
+        let value = 8;
+        if (i >= 10 && i < 20) value = 14;
+        else if (i >= 20 && i < 30) value = 18;
+        else if (i >= 30 && i < 40) value = 24;
+        else if (i >= 40 && i < 50) value = 28;
+        else if (i >= 50 && i < 60) value = 36;
+        else if (i >= 60 && i < 73) value = 50;
+        else if (i >= 73 && i < 81) value = 70;
+        else if (i >= 81 && i < 87) value = 80;
+        else if (i >= 87 && i < 92) value = 100;
+        else if (i >= 92 && i < 97) value = 110;
+        else if (i >= 97 && i < 99) value = 125;
+        else if (i == 99) value = 135;
+        else if (i == 100) value = 120;
+        else if (i > 100 && i <= level) value = 220;
+        result += `OverridePlayerLevelEngramPoints=${value}\n`;
+      }
+      result = `OverridePlayerLevelEngramPoints=0\n` + result;
+      document.getElementById("engramCode").value = result.trim();
     }
 
     function copyXPResults() {
