@@ -100,13 +100,22 @@
       <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
       <label for="maxLevel">أقصى مستوى تريده:</label>
       <input type="number" id="maxLevel" placeholder="مثلاً 1000" max="1000">
-
       <label><input type="checkbox" id="includeEngrams"> أضف الإنقرامز مع الكود</label><br>
       <label><input type="checkbox" id="onlyEngrams"> توليد كود الإنقرامز فقط</label>
-
       <button onclick="generateCode()">توليد الكود</button>
       <textarea id="generatedCode" readonly placeholder="سيظهر الكود هنا..." rows="10"></textarea>
       <button class="copy-button" onclick="copyGeneratedCode()">📋 نسخ الكود</button>
+    </section>
+
+    <hr>
+
+    <section class="tool-section">
+      <h2>🎓 أداة توليد الإنقرامز يدوياً</h2>
+      <label for="engramLevel">عدد المستويات التي تريد لها إنقرامز:</label>
+      <input type="number" id="engramLevel" placeholder="مثلاً 150" max="1000">
+      <button onclick="generateEngrams()">توليد كود الإنقرامز فقط</button>
+      <textarea id="engramCode" readonly placeholder="كود الإنقرامز سيظهر هنا..." rows="5"></textarea>
+      <button class="copy-button" onclick="copyEngrams()">📋 نسخ الإنقرامز</button>
     </section>
   </div>
 
@@ -120,11 +129,9 @@
       const xpRegex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
       let match;
       let totalXP = 0;
-
       while ((match = xpRegex.exec(input)) !== null) {
         totalXP += parseInt(match[1]);
       }
-
       if (totalXP > 0) {
         document.getElementById("results").style.display = "block";
         document.getElementById("playerXpCode").innerHTML = `<code>OverrideMaxExperiencePointsPlayer=${totalXP}</code>`;
@@ -138,29 +145,34 @@
       const maxLevel = parseInt(document.getElementById("maxLevel").value);
       const includeEngrams = document.getElementById("includeEngrams").checked;
       const onlyEngrams = document.getElementById("onlyEngrams").checked;
-
       if (!maxLevel || maxLevel < 1 || maxLevel > 1000) {
         alert("يرجى إدخال مستوى صالح (1 - 1000)");
         return;
       }
-
       let result = "";
-
       if (!onlyEngrams) {
         result += "LevelExperienceRampOverrides=(";
         for (let i = 0; i <= maxLevel; i++) {
-          const xp = Math.floor(7 + i * i * 2.5); // صيغة تقريبية
+          const xp = Math.floor(7 + i * i * 2.5);
           result += `ExperiencePointsForLevel[${i}]=${xp}`;
           if (i < maxLevel) result += ",";
         }
         result += ")\n";
       }
-
       if (includeEngrams || onlyEngrams) {
         result += `OverridePlayerLevelEngramPoints=` + Array(maxLevel).fill(10).join(",");
       }
-
       document.getElementById("generatedCode").value = result;
+    }
+
+    function generateEngrams() {
+      const level = parseInt(document.getElementById("engramLevel").value);
+      if (!level || level < 1 || level > 1000) {
+        alert("يرجى إدخال مستوى صالح للإنقرامز (1 - 1000)");
+        return;
+      }
+      const code = "OverridePlayerLevelEngramPoints=" + Array(level).fill(10).join(",");
+      document.getElementById("engramCode").value = code;
     }
 
     function copyXPResults() {
@@ -173,6 +185,11 @@
     function copyGeneratedCode() {
       const code = document.getElementById("generatedCode").value;
       navigator.clipboard.writeText(code).then(() => alert("✅ تم نسخ الكود!"));
+    }
+
+    function copyEngrams() {
+      const code = document.getElementById("engramCode").value;
+      navigator.clipboard.writeText(code).then(() => alert("✅ تم نسخ الإنقرامز!"));
     }
   </script>
 </body>
