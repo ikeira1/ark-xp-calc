@@ -79,7 +79,18 @@
   </header>
 
   <div class="container">
-    <h1>حساب أكواد XP وتوليد الكود الكامل للعبة ARK</h1>
+    <h1>حساب أكواد XP وتوليد الأكواد</h1>
+
+    <section class="tool-section">
+      <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
+      <label for="maxLevel">أقصى مستوى تريده:</label>
+      <input type="number" id="maxLevel" placeholder="مثلاً 1000" max="1000">
+      <button onclick="generateCode()">توليد كود اللفلات</button>
+      <textarea id="generatedCode" readonly placeholder="سيظهر الكود هنا..." rows="10"></textarea>
+      <button class="copy-button" onclick="copyGeneratedCode()">📋 نسخ الكود</button>
+    </section>
+
+    <hr>
 
     <section class="tool-section">
       <h2>🔢 أداة حساب OverrideMaxExperiencePoints</h2>
@@ -92,19 +103,6 @@
         <p id="dinoXpCode"></p>
         <button class="copy-button" onclick="copyXPResults()">📋 نسخ النتائج</button>
       </div>
-    </section>
-
-    <hr>
-
-    <section class="tool-section">
-      <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
-      <label for="maxLevel">أقصى مستوى تريده:</label>
-      <input type="number" id="maxLevel" placeholder="مثلاً 1000" max="1000">
-      <label><input type="checkbox" id="includeEngrams"> أضف الإنقرامز مع الكود</label><br>
-      <label><input type="checkbox" id="onlyEngrams"> توليد كود الإنقرامز فقط</label>
-      <button onclick="generateCode()">توليد الكود</button>
-      <textarea id="generatedCode" readonly placeholder="سيظهر الكود هنا..." rows="10"></textarea>
-      <button class="copy-button" onclick="copyGeneratedCode()">📋 نسخ الكود</button>
     </section>
 
     <hr>
@@ -143,25 +141,17 @@
 
     function generateCode() {
       const maxLevel = parseInt(document.getElementById("maxLevel").value);
-      const includeEngrams = document.getElementById("includeEngrams").checked;
-      const onlyEngrams = document.getElementById("onlyEngrams").checked;
       if (!maxLevel || maxLevel < 1 || maxLevel > 1000) {
         alert("يرجى إدخال مستوى صالح (1 - 1000)");
         return;
       }
-      let result = "";
-      if (!onlyEngrams) {
-        result += "LevelExperienceRampOverrides=(";
-        for (let i = 0; i <= maxLevel; i++) {
-          const xp = Math.floor(7 + i * i * 2.5);
-          result += `ExperiencePointsForLevel[${i}]=${xp}`;
-          if (i < maxLevel) result += ",";
-        }
-        result += ")\n";
+      let result = "LevelExperienceRampOverrides=(";
+      for (let i = 0; i <= maxLevel; i++) {
+        const xp = Math.floor(7 + i * i * 2.5);
+        result += `ExperiencePointsForLevel[${i}]=${xp}`;
+        if (i < maxLevel) result += ",";
       }
-      if (includeEngrams || onlyEngrams) {
-        result += `OverridePlayerLevelEngramPoints=` + Array(maxLevel).fill(10).join(",");
-      }
+      result += ")";
       document.getElementById("generatedCode").value = result;
     }
 
