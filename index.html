@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ARK XP Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>حساب أكواد XP وتوليد الكود الكامل للعبة ARK</h1>
+
+    <section class="tool-section">
+      <h2>🔢 أداة حساب OverrideMaxExperiencePoints</h2>
+      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
+      <button id="calculate">احسب الأكواد</button>
+      <div class="results" id="results" style="display:none;">
+        <h3>النتائج:</h3>
+        <p><code>OverrideMaxExperiencePointsPlayer=70368744177664</code></p>
+        <p id="playerXpCode"></p>
+        <p id="dinoXpCode"></p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section class="tool-section">
+      <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
+      <label for="maxLevel">أقصى مستوى تريده:</label>
+      <input type="number" id="maxLevel" placeholder="مثلاً 412">
+      <button id="generate">توليد الكود</button>
+      <textarea id="generatedCode" readonly placeholder="سيظهر الكود هنا..." rows="10"></textarea>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <h3>ادعم القنوات والسيرفرات الخاصة فيني 💙</h3>
+    <ul>
+      <li>🎮 <strong>الديسكورد</strong>: <a href="https://discord.gg/2rMzBv6zRv" target="_blank">اضغط هنا للانضمام</a></li>
+      <li>📺 <strong>قناة اليوتيوب</strong>: <a href="https://www.youtube.com/@ikeira1" target="_blank">شاهد المحتوى</a></li>
+      <li>☕ <strong>دعم عبر دكان تب</strong>: <a href="https://tip.dokan.sa/keira" target="_blank">ادعمني هنا</a></li>
+    </ul>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
