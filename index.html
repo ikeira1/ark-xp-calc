@@ -4,9 +4,104 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ARK XP Calculator</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #111;
+      color: #fff;
+      padding: 20px;
+      direction: rtl;
+    }
+    .top-banner {
+      background-color: #222;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .top-banner h2 {
+      margin-bottom: 10px;
+      color: #0af;
+    }
+    .social-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .social-links li {
+      margin: 6px 0;
+      font-size: 16px;
+    }
+    .social-links a {
+      color: #0af;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #222;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    button {
+      background-color: #0a84ff;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0070cc;
+    }
+    .results {
+      margin-top: 15px;
+      background-color: #333;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    code {
+      background-color: #000;
+      padding: 4px 8px;
+      border-radius: 5px;
+      display: block;
+      margin: 5px 0;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #444;
+      margin: 30px 0;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
+
+  <header class="top-banner">
+    <h2>🚀 تابعني وادعمني</h2>
+    <ul class="social-links">
+      <li>🎮 <strong>الديسكورد</strong>: <a href="https://discord.gg/2rMzBv6zRv" target="_blank">اضغط هنا للانضمام</a></li>
+      <li>📺 <strong>اليوتيوب</strong>: <a href="https://www.youtube.com/@ikeira1" target="_blank">شاهد القناة</a></li>
+      <li>☕ <strong>دكان تب</strong>: <a href="https://tip.dokan.sa/keira" target="_blank">ادعمني هنا</a></li>
+    </ul>
+  </header>
+
   <div class="container">
     <h1>حساب أكواد XP وتوليد الكود الكامل للعبة ARK</h1>
 
@@ -16,7 +111,7 @@
       <button id="calculate">احسب الأكواد</button>
       <div class="results" id="results" style="display:none;">
         <h3>النتائج:</h3>
-        <p><code>OverrideMaxExperiencePointsPlayer=70368744177664</code></p>
+        <code>OverrideMaxExperiencePointsPlayer=70368744177664</code>
         <p id="playerXpCode"></p>
         <p id="dinoXpCode"></p>
       </div>
@@ -26,22 +121,58 @@
 
     <section class="tool-section">
       <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
-      <label for="maxLevel">أقصى مستوى تريده:</label>
-      <input type="number" id="maxLevel" placeholder="مثلاً 412">
+      <label for="maxLevel">أقصى مستوى تريده (حتى 1000):</label>
+      <input type="number" id="maxLevel" placeholder="مثلاً 500" max="1000" min="1">
       <button id="generate">توليد الكود</button>
       <textarea id="generatedCode" readonly placeholder="سيظهر الكود هنا..." rows="10"></textarea>
     </section>
   </div>
 
   <footer class="footer">
-    <h3>ادعم القنوات والسيرفرات الخاصة فيني 💙</h3>
-    <ul>
-      <li>🎮 <strong>الديسكورد</strong>: <a href="https://discord.gg/2rMzBv6zRv" target="_blank">اضغط هنا للانضمام</a></li>
-      <li>📺 <strong>قناة اليوتيوب</strong>: <a href="https://www.youtube.com/@ikeira1" target="_blank">شاهد المحتوى</a></li>
-      <li>☕ <strong>دعم عبر دكان تب</strong>: <a href="https://tip.dokan.sa/keira" target="_blank">ادعمني هنا</a></li>
-    </ul>
+    <p>شكراً لك على دعمك 💙</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    document.getElementById("calculate").addEventListener("click", function () {
+      let input = document.getElementById("xpInput").value;
+      let xpRegex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
+      let match;
+      let totalXP = 0;
+
+      while ((match = xpRegex.exec(input)) !== null) {
+        totalXP += parseInt(match[1]);
+      }
+
+      if (totalXP > 0) {
+        document.getElementById("playerXpCode").innerHTML =
+          `<code>OverrideMaxExperiencePointsPlayer=${totalXP}</code>`;
+        document.getElementById("dinoXpCode").innerHTML =
+          `<code>OverrideMaxExperiencePointsDino=${totalXP}</code>`;
+        document.getElementById("results").style.display = "block";
+      } else {
+        document.getElementById("playerXpCode").innerHTML = "";
+        document.getElementById("dinoXpCode").innerHTML = "";
+        document.getElementById("results").style.display = "none";
+      }
+    });
+
+    document.getElementById("generate").addEventListener("click", function () {
+      const maxLevel = parseInt(document.getElementById("maxLevel").value);
+      if (!maxLevel || maxLevel < 1 || maxLevel > 1000) {
+        alert("الرجاء إدخال رقم صحيح بين 1 و 1000.");
+        return;
+      }
+
+      let result = "LevelExperienceRampOverrides=(";
+      let xp = 5;
+      for (let i = 0; i <= maxLevel; i++) {
+        xp += Math.floor(i * 5 + 2); // تصاعد بسيط
+        result += `ExperiencePointsForLevel[${i}]=${xp},`;
+      }
+      result = result.replace(/,$/, ")"); // إزالة الفاصلة الأخيرة
+      document.getElementById("generatedCode").value = result;
+    });
+  </script>
+
 </body>
 </html>
