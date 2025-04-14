@@ -1,104 +1,121 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: sans-serif;
   background-color: #111;
   color: #fff;
+  padding: 20px;
   direction: rtl;
-  margin: 0;
-  padding: 0;
 }
 
-.top-banner {
+.support-banner {
   background-color: #222;
-  padding: 15px;
+  padding: 20px;
+  border-radius: 12px;
   text-align: center;
+  margin-bottom: 20px;
+  border: 2px solid #444;
 }
 
-.social-links {
-  list-style: none;
-  padding: 0;
+.support-banner h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #ffcc00;
 }
 
-.social-links li {
+.support-banner p {
+  color: #ccc;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.support-banner .links a {
   display: inline-block;
-  margin: 0 10px;
+  margin: 5px 10px;
+  padding: 10px 15px;
+  background-color: #0a84ff;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.support-banner .links a:hover {
+  background-color: #0066cc;
+}
+
+nav {
+  background-color: #222;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 nav ul {
   display: flex;
-  justify-content: center;
-  background-color: #000;
-  padding: 10px 0;
-  margin: 0;
   list-style: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0;
 }
 
-nav ul li {
-  margin: 0 15px;
-}
-
-nav ul li a {
-  color: #fff;
+nav a {
   text-decoration: none;
+  color: #0a84ff;
+  font-weight: bold;
+  background-color: #000;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+nav a:hover {
+  background-color: #0a84ff;
+  color: #fff;
 }
 
 .container {
-  padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
 .section {
   display: none;
+  margin-bottom: 20px;
+  background-color: #222;
+  padding: 20px;
+  border-radius: 12px;
 }
 
 .section.active {
   display: block;
 }
 
-textarea,
-input[type="number"],
-input[type="text"] {
+input, textarea {
   width: 100%;
+  margin-bottom: 10px;
   padding: 10px;
-  margin: 10px 0;
-  background-color: #222;
-  border: 1px solid #444;
+  background-color: #333;
   color: #fff;
-  border-radius: 5px;
+  border: none;
+  border-radius: 8px;
 }
 
 button {
   background-color: #0a84ff;
+  color: #fff;
+  padding: 12px;
   border: none;
-  padding: 10px 15px;
-  color: white;
+  border-radius: 8px;
   cursor: pointer;
   margin: 5px 0;
-  border-radius: 5px;
 }
 
 button:hover {
-  background-color: #006fd6;
+  background-color: #0070cc;
 }
 
 pre {
-  background-color: #222;
+  background-color: #000;
   padding: 10px;
-  white-space: pre-wrap;
-  border-radius: 5px;
-  border: 1px solid #444;
-}
-
-.resource-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 5px;
-}
-
-.resource-row input {
-  flex: 1;
-}
-
-.resource-row button {
-  background-color: red;
-  font-size: 14px;
+  border-radius: 10px;
+  overflow-x: auto;
 }
