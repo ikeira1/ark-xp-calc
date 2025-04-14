@@ -65,7 +65,6 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      width: 100%;
       font-size: 16px;
       margin-top: 5px;
     }
@@ -82,7 +81,6 @@
       display: block;
     }
     .copy-button {
-      margin-top: 10px;
       background-color: #28a745;
     }
     .section {
@@ -102,6 +100,18 @@
       background-color: red;
       width: auto;
       padding: 5px 10px;
+    }
+    .craft-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .craft-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -158,33 +168,45 @@
     showSection('craftingTool');
 
     const craftingData = {
-      fabricator: [
-        { item: "Metal Ingot", amount: 35 },
-        { item: "Cementing Paste", amount: 20 },
-        { item: "Crystal", amount: 15 },
-        { item: "Oil", amount: 10 },
-        { item: "Sparkpowder", amount: 50 }
-      ],
-      industrialforge: [
-        { item: "Cementing Paste", amount: 250 },
-        { item: "Crystal", amount: 250 },
-        { item: "Oil", amount: 400 },
-        { item: "Polymer", amount: 600 },
-        { item: "Metal Ingot", amount: 2500 }
-      ]
+      fabricator: {
+        image: 'https://ark.wiki.gg/images/1/1a/Fabricator.png',
+        resources: [
+          { item: "Metal Ingot", amount: 35 },
+          { item: "Cementing Paste", amount: 20 },
+          { item: "Crystal", amount: 15 },
+          { item: "Oil", amount: 10 },
+          { item: "Sparkpowder", amount: 50 }
+        ]
+      },
+      industrialforge: {
+        image: 'https://ark.wiki.gg/images/f/f1/Industrial_Forge.png',
+        resources: [
+          { item: "Cementing Paste", amount: 250 },
+          { item: "Crystal", amount: 250 },
+          { item: "Oil", amount: 400 },
+          { item: "Polymer", amount: 600 },
+          { item: "Metal Ingot", amount: 2500 }
+        ]
+      }
     };
 
     function searchCraftItem() {
       const input = document.getElementById("craftSearch").value.trim().toLowerCase();
       const output = document.getElementById("craftResults");
       output.innerHTML = "";
-      if (!(input in craftingData)) {
+
+      const matches = Object.keys(craftingData).filter(key => key.includes(input));
+      if (matches.length === 0) {
         output.innerHTML = `<p style='color:orange'>لم يتم العثور على هذا العنصر. جرب اسم آخر.</p>`;
         return;
       }
 
-      const resources = craftingData[input];
-      let html = `<h4>الموارد المطلوبة لصناعة <span style='color:#0af'>${input}</span>:</h4>`;
+      const itemKey = matches[0];
+      const data = craftingData[itemKey];
+      const resources = data.resources;
+      const img = data.image ? `<img src="${data.image}" alt="${itemKey}" class="craft-img" />` : "";
+
+      let html = `${img}<h4>الموارد المطلوبة لصناعة <span style='color:#0af'>${itemKey}</span>:</h4>`;
       html += `<div id='editableList'>`;
       resources.forEach((res, idx) => {
         html += `
@@ -195,10 +217,12 @@
           </div>`;
       });
       html += `</div>
-        <button onclick='addResource()'>➕ إضافة مورد</button>
-        <button onclick='updateCraftingList("${input}")'>💾 تحديث</button>
-        <button class='copy-button' onclick='copyCraftList()'>📋 نسخ</button>
-      `;
+        <div class='craft-buttons'>
+          <button class='copy-button' onclick='copyCraftList()'>📋 نسخ</button>
+          <button onclick='updateCraftingList("${itemKey}")'>💾 تحديث</button>
+          <button onclick='addResource()'>➕ إضافة مورد</button>
+        </div>
+        <div id='craftCodeResult'></div>`;
       output.innerHTML = html;
     }
 
@@ -234,8 +258,7 @@
       });
 
       iniText += resourceList.join(",") + "))";
-      const result = `<h4>🔧 كود تعديل الكرافت:</h4><code>${iniText}</code>`;
-      document.getElementById("craftResults").insertAdjacentHTML("beforeend", result);
+      document.getElementById("craftCodeResult").innerHTML = `<h4>🔧 كود تعديل الكرافت:</h4><code>${iniText}</code>`;
     }
 
     function copyCraftList() {
