@@ -1,132 +1,107 @@
-const sections = document.querySelectorAll(".section");
 document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    const target = link.getAttribute("data-section");
-    sections.forEach(section => section.classList.remove("active"));
-    document.getElementById(target).classList.add("active");
+  link.addEventListener("click", function () {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(this.dataset.section).classList.add("active");
   });
 });
 
+function copyResult(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+  alert("تم النسخ!");
+}
+
 function generateLevels() {
   const count = parseInt(document.getElementById("levelCount").value);
-  if (!count || count < 1) return;
-
-  let result = "LevelExperienceRampOverrides=(ExperiencePointsForLevel[0]=5";
-  let xp = 5;
-
-  for (let i = 1; i <= count; i++) {
-    xp += Math.floor(5 + i * 10.5);
-    result += `,ExperiencePointsForLevel[${i}]=${xp}`;
+  let result = "LevelExperienceRampOverrides=(";
+  for (let i = 0; i < count; i++) {
+    result += `ExperiencePointsForLevel[${i}]=${(i + 1) * 5},`;
   }
-  result += ")";
-  document.getElementById("levelResult").textContent = result;
+  result = result.slice(0, -1) + ")";
+  document.getElementById("levelResult").innerText = result;
 }
 
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
-  const xpRegex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
-  let match, total = 0;
-
-  while ((match = xpRegex.exec(input)) !== null) {
-    total += parseInt(match[1]);
-  }
-
-  if (total > 0) {
-    document.getElementById("xpResult").textContent = 
-      `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
-  }
+  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
+  const values = matches ? matches.map(m => parseInt(m.split("=")[1])) : [];
+  const total = values.reduce((a, b) => a + b, 0);
+  const result = `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
+  document.getElementById("xpResult").innerText = result;
 }
 
 function generateEngrams() {
-  const level = parseInt(document.getElementById("engramsLevel").value);
-  if (!level || level < 1) return;
-
+  const levels = parseInt(document.getElementById("engramsLevel").value);
   const points = [
-    { range: [1, 9], value: 8 },
-    { range: [10, 19], value: 14 },
-    { range: [20, 29], value: 18 },
-    { range: [30, 39], value: 24 },
-    { range: [40, 49], value: 28 },
-    { range: [50, 59], value: 36 },
-    { range: [60, 73], value: 50 },
-    { range: [74, 81], value: 70 },
-    { range: [82, 87], value: 80 },
-    { range: [88, 92], value: 100 },
-    { range: [93, 97], value: 110 },
-    { range: [98, 99], value: 125 },
-    { range: [100, 101], value: 135 },
-    { range: [102, 103], value: 120 },
-    { range: [104, 116], value: 220 },
-    { range: [117, level], value: 260 }
+    0, 8, 8, 8, 8, 8, 8, 8, 8, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+    18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
+    24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+    28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+    36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
+    50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
+    50, 50, 50, 70, 70, 70, 70, 70, 70, 70,
+    70, 80, 80, 80, 80, 80, 80, 100, 100, 100,
+    100, 100, 110, 110, 110, 110, 110, 125, 125, 135,
+    135, 135, 120, 120
   ];
 
   let result = "";
-  for (let i = 1; i <= level; i++) {
-    for (const p of points) {
-      if (i >= p.range[0] && i <= p.range[1]) {
-        result += `OverridePlayerLevelEngramPoints=${p.value}\n`;
-        break;
-      }
-    }
+  for (let i = 0; i < levels; i++) {
+    const value = points[i] !== undefined ? points[i] : 220;
+    result += `OverridePlayerLevelEngramPoints=${value}\n`;
   }
-  document.getElementById("engramsResult").textContent = result;
-}
-
-function copyResult(id) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text);
+  document.getElementById("engramsResult").innerText = result;
 }
 
 function searchCraft() {
-  const name = document.getElementById("searchCraftInput").value.toLowerCase();
-  const resultsDiv = document.getElementById("craftResults");
+  const item = document.getElementById("searchCraftInput").value.toLowerCase();
+  fetch("craft-data.json")
+    .then(res => res.json())
+    .then(data => {
+      const found = data.find(entry => entry.name.toLowerCase().includes(item));
+      if (!found) return document.getElementById("craftResults").innerHTML = "لا يوجد نتيجة.";
 
-  const sampleItems = {
-    fabricator: [
-      { resource: "MetalIngot", amount: 35 },
-      { resource: "Sparkpowder", amount: 20 },
-      { resource: "Crystal", amount: 25 },
-      { resource: "Oil", amount: 10 },
-      { resource: "Electronics", amount: 15 }
-    ],
-    campfire: [
-      { resource: "Stone", amount: 12 },
-      { resource: "Thatch", amount: 5 },
-      { resource: "Wood", amount: 3 }
-    ]
-  };
+      const container = document.createElement("div");
+      container.innerHTML = `<h4>${found.name}</h4>`;
+      found.resources.forEach((r, i) => {
+        const row = document.createElement("div");
+        row.className = "resource-row";
+        row.innerHTML = `
+          <input type="text" value="${r.id}" />
+          <input type="number" value="${r.amount}" />
+          <button onclick="this.parentElement.remove()">حذف</button>
+        `;
+        container.appendChild(row);
+      });
+      const addBtn = document.createElement("button");
+      addBtn.innerText = "إضافة مورد";
+      addBtn.onclick = () => {
+        const row = document.createElement("div");
+        row.className = "resource-row";
+        row.innerHTML = `
+          <input type="text" placeholder="Resource ID" />
+          <input type="number" placeholder="الكمية" />
+          <button onclick="this.parentElement.remove()">حذف</button>
+        `;
+        container.appendChild(row);
+      };
 
-  const item = Object.entries(sampleItems).find(([key]) => key.includes(name));
-  if (!item) {
-    resultsDiv.innerHTML = "لم يتم العثور على العنصر.";
-    return;
-  }
+      const genBtn = document.createElement("button");
+      genBtn.innerText = "توليد الكود";
+      genBtn.onclick = () => {
+        const rows = container.querySelectorAll(".resource-row");
+        const resArr = Array.from(rows).map(row => {
+          const inputs = row.querySelectorAll("input");
+          return `(ResourceItemTypeString="${inputs[0].value}",BaseResourceRequirement=${inputs[1].value})`;
+        }).join(",");
+        const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${found.id}",BaseCraftingResourceRequirements=[${resArr}])`;
+        container.appendChild(document.createElement("pre")).innerText = code;
+        navigator.clipboard.writeText(code);
+      };
 
-  const [itemName, resources] = item;
-  let html = `<h4>${itemName}</h4><ul>`;
-  resources.forEach((res, index) => {
-    html += `
-      <li>
-        <input type="text" value="${res.resource}" id="res-name-${index}" />
-        <input type="number" value="${res.amount}" id="res-amount-${index}" />
-      </li>`;
-  });
-  html += `</ul>
-    <button onclick="generateCraft('${itemName}', ${resources.length})">🎯 توليد الكود</button>
-    <pre id="craftCodeResult"></pre>
-    <button onclick="copyResult('craftCodeResult')">📋 نسخ الكود</button>
-  `;
-  resultsDiv.innerHTML = html;
-}
-
-function generateCraft(name, count) {
-  let code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${name}_C",BaseCraftingResourceRequirements=[`;
-  for (let i = 0; i < count; i++) {
-    const res = document.getElementById(`res-name-${i}`).value;
-    const amt = document.getElementById(`res-amount-${i}`).value;
-    code += `(ResourceItemTypeString="${res}_C",BaseResourceRequirement=${amt}),`;
-  }
-  code = code.replace(/,$/, "") + "])";
-  document.getElementById("craftCodeResult").textContent = code;
+      container.appendChild(addBtn);
+      container.appendChild(genBtn);
+      document.getElementById("craftResults").innerHTML = "";
+      document.getElementById("craftResults").appendChild(container);
+    });
 }
