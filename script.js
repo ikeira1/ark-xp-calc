@@ -1,86 +1,81 @@
-// تنقل بين الأقسام
 document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", function () {
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    const sectionId = this.getAttribute("data-section");
-    document.getElementById(sectionId).classList.add("active");
+  link.addEventListener("click", e => {
+    document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(e.target.dataset.section).classList.add("active");
   });
 });
 
-// نسخ النتيجة
 function copyResult(id) {
-  const content = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(content).then(() => alert("تم النسخ!"));
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
 }
 
-// توليد لفلات
 function generateLevels() {
-  const count = parseInt(document.getElementById("levelCount").value || 0);
-  let output = `LevelExperienceRampOverrides=(`;
-  let xp = 5;
-  for (let i = 0; i <= count; i++) {
-    output += `ExperiencePointsForLevel[${i}]=${xp}`;
-    if (i !== count) output += ",";
-    xp += Math.floor(xp * 0.1 + 10);
+  const count = parseInt(document.getElementById("levelCount").value);
+  let result = "";
+  for (let i = 1; i <= count; i++) {
+    result += `ExperiencePointsForLevel[${i}]=${(i * i * 5) + 5}\n`;
   }
-  output += `)`;
-  document.getElementById("levelResult").innerText = output;
+  document.getElementById("levelResult").textContent = result.trim();
 }
 
-// حساب XP
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
   const regex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
-  let match, total = 0;
-
+  let total = 0, match;
   while ((match = regex.exec(input)) !== null) {
     total += parseInt(match[1]);
   }
 
-  const result = `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
-  document.getElementById("xpResult").innerText = result;
+  const output = `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
+  document.getElementById("xpResult").textContent = output;
 }
 
-// توليد Engrams
 function generateEngrams() {
-  const level = parseInt(document.getElementById("engramsLevel").value || 0);
-  let output = "";
-  for (let i = 0; i <= level; i++) {
-    let points = i < 10 ? 0 : i < 20 ? 8 : i < 30 ? 14 : i < 40 ? 18 : i < 50 ? 24 :
-                 i < 60 ? 28 : i < 70 ? 36 : i < 80 ? 50 : i < 90 ? 70 : i < 100 ? 80 :
-                 i < 110 ? 100 : i < 120 ? 110 : i < 130 ? 125 : i < 140 ? 135 :
-                 i < 150 ? 120 : 220;
-    output += `OverridePlayerLevelEngramPoints=${points}\n`;
+  const lvl = parseInt(document.getElementById("engramsLevel").value);
+  const points = [];
+  for (let i = 0; i <= lvl; i++) {
+    if (i <= 9) points.push(0);
+    else if (i <= 19) points.push(8);
+    else if (i <= 29) points.push(14);
+    else if (i <= 39) points.push(18);
+    else if (i <= 49) points.push(24);
+    else if (i <= 59) points.push(28);
+    else if (i <= 69) points.push(36);
+    else if (i <= 82) points.push(50);
+    else if (i <= 89) points.push(70);
+    else if (i <= 95) points.push(80);
+    else if (i <= 99) points.push(100);
+    else if (i <= 104) points.push(110);
+    else if (i <= 106) points.push(125);
+    else if (i <= 108) points.push(135);
+    else if (i <= 110) points.push(120);
+    else points.push(220);
   }
-  document.getElementById("engramsResult").innerText = output;
+  document.getElementById("engramsResult").textContent = points.map(p => `OverridePlayerLevelEngramPoints=${p}`).join("\n");
 }
 
-// الكرافت اليدوي
-function addResourceInput() {
+function addResource() {
   const container = document.getElementById("resourcesContainer");
   const div = document.createElement("div");
+  div.className = "resource-entry";
   div.innerHTML = `
-    <input type="text" placeholder="ID المورد (مثل: PrimalItemResource_Wood_C)" class="resource-id">
-    <input type="number" placeholder="الكمية" class="resource-amount" style="margin-right: 10px;">
-    <button onclick="this.parentNode.remove()">❌</button>
+    <input placeholder="ID المورد (مثل PrimalItemResource_Wood_C)" />
+    <input type="number" placeholder="الكمية" />
+    <button onclick="this.parentElement.remove()">🗑️</button>
   `;
   container.appendChild(div);
 }
 
 function generateCraftingCode() {
-  const itemId = document.getElementById("craftedItemId").value;
-  const ids = document.querySelectorAll(".resource-id");
-  const amounts = document.querySelectorAll(".resource-amount");
+  const itemId = document.getElementById("craftItemId").value.trim();
+  const resources = Array.from(document.querySelectorAll("#resourcesContainer .resource-entry")).map(div => {
+    const inputs = div.querySelectorAll("input");
+    const id = inputs[0].value.trim();
+    const qty = parseFloat(inputs[1].value);
+    return `(ResourceItemTypeString="${id}",BaseResourceRequirement=${qty},bCraftingRequireExactResourceType=false)`;
+  });
 
-  let requirements = [];
-  for (let i = 0; i < ids.length; i++) {
-    const id = ids[i].value.trim();
-    const amount = parseInt(amounts[i].value.trim());
-    if (id && amount > 0) {
-      requirements.push(`(ResourceItemTypeString="${id}",BaseResourceRequirement=${amount})`);
-    }
-  }
-
-  const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=[${requirements.join(",")}])`;
-  document.getElementById("craftingResult").innerText = code;
+  const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=(${resources.join(",")}))`;
+  document.getElementById("craftingResult").textContent = code;
 }
