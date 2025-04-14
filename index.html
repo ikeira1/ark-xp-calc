@@ -87,6 +87,20 @@
     .section {
       margin-bottom: 40px;
     }
+    .editable {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 5px 0;
+    }
+    .editable input[type=number], .editable input[type=text] {
+      width: auto;
+    }
+    .editable button {
+      background-color: red;
+      width: auto;
+      padding: 5px 10px;
+    }
   </style>
 </head>
 <body>
@@ -109,35 +123,6 @@
   </nav>
 
   <div class="container">
-    <section class="section" id="levelTool">
-      <h2>🧬 أداة توليد LevelExperienceRampOverrides</h2>
-      <input type="number" id="maxLevel" placeholder="أقصى لفل مثلًا 1000" max="1000">
-      <button onclick="generateCode()">توليد كود اللفلات</button>
-      <textarea id="generatedCode" readonly rows="8" placeholder="الكود هنا..."></textarea>
-      <button class="copy-button" onclick="copyGeneratedCode()">📋 نسخ الكود</button>
-    </section>
-
-    <section class="section" id="xpTool">
-      <h2>🔢 أداة حساب OverrideMaxExperiencePoints</h2>
-      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
-      <button onclick="calculateXP()">احسب الأكواد</button>
-      <div class="results" id="results" style="display:none;">
-        <h3>النتائج:</h3>
-        <p><code>OverrideMaxExperiencePointsPlayer=70368744177664</code></p>
-        <p id="playerXpCode"></p>
-        <p id="dinoXpCode"></p>
-        <button class="copy-button" onclick="copyXPResults()">📋 نسخ النتائج</button>
-      </div>
-    </section>
-
-    <section class="section" id="engramTool">
-      <h2>🎓 أداة توليد الإنقرامز</h2>
-      <input type="number" id="engramLevel" placeholder="عدد اللفلات للإنقرامز" max="1000">
-      <button onclick="generateEngrams()">توليد كود الإنقرامز</button>
-      <textarea id="engramCode" readonly rows="10" placeholder="كود الإنقرامز يظهر هنا..."></textarea>
-      <button class="copy-button" onclick="copyEngrams()">📋 نسخ الإنقرامز</button>
-    </section>
-
     <section class="section" id="craftingTool">
       <h2>🔍 بحث العناصر القابلة للصناعة</h2>
       <input type="text" id="craftSearch" placeholder="ابحث عن عنصر... مثل: fabricator">
@@ -154,12 +139,6 @@
         { item: "Crystal", amount: 15 },
         { item: "Oil", amount: 10 },
         { item: "Sparkpowder", amount: 50 }
-      ],
-      campfire: [
-        { item: "Stone", amount: 12 },
-        { item: "Wood", amount: 5 },
-        { item: "Thatch", amount: 10 },
-        { item: "Flint", amount: 1 }
       ]
     };
 
@@ -167,94 +146,73 @@
       const input = document.getElementById("craftSearch").value.trim().toLowerCase();
       const output = document.getElementById("craftResults");
       output.innerHTML = "";
-      if (input in craftingData) {
-        let html = `<h4>الموارد المطلوبة لصناعة <span style='color:#0af'>${input}</span>:</h4><ul>`;
-        craftingData[input].forEach(res => {
-          html += `<li>${res.item}: ${res.amount}</li>`;
-        });
-        html += "</ul>";
-        output.innerHTML = html;
-      } else {
+      if (!(input in craftingData)) {
         output.innerHTML = `<p style='color:orange'>لم يتم العثور على هذا العنصر. جرب اسم آخر.</p>`;
-      }
-    }
-
-    function calculateXP() {
-      const input = document.getElementById("xpInput").value;
-      const xpRegex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
-      let match;
-      let totalXP = 0;
-      while ((match = xpRegex.exec(input)) !== null) {
-        totalXP += parseInt(match[1]);
-      }
-      if (totalXP > 0) {
-        document.getElementById("results").style.display = "block";
-        document.getElementById("playerXpCode").innerHTML = `<code>OverrideMaxExperiencePointsPlayer=${totalXP}</code>`;
-        document.getElementById("dinoXpCode").innerHTML = `<code>OverrideMaxExperiencePointsDino=${totalXP}</code>`;
-      } else {
-        document.getElementById("results").style.display = "none";
-      }
-    }
-
-    function generateCode() {
-      const maxLevel = parseInt(document.getElementById("maxLevel").value);
-      if (!maxLevel || maxLevel < 1 || maxLevel > 1000) {
-        alert("يرجى إدخال مستوى صالح (1 - 1000)");
         return;
       }
-      let result = "LevelExperienceRampOverrides=(";
-      for (let i = 0; i <= maxLevel; i++) {
-        const xp = Math.floor(7 + i * i * 2.5);
-        result += `ExperiencePointsForLevel[${i}]=${xp}`;
-        if (i < maxLevel) result += ",";
-      }
-      result += ")";
-      document.getElementById("generatedCode").value = result;
+
+      const resources = craftingData[input];
+      let html = `<h4>الموارد المطلوبة لصناعة <span style='color:#0af'>${input}</span>:</h4>`;
+      html += `<div id='editableList'>`;
+      resources.forEach((res, idx) => {
+        html += `
+          <div class='editable' data-index='${idx}'>
+            <input type='text' value='${res.item}' />
+            <input type='number' value='${res.amount}' />
+            <button onclick='removeResource(${idx})'>🗑️</button>
+          </div>`;
+      });
+      html += `</div>
+        <button onclick='addResource()'>➕ إضافة مورد</button>
+        <button onclick='updateCraftingList()'>💾 تحديث</button>
+        <button class='copy-button' onclick='copyCraftList()'>📋 نسخ</button>
+      `;
+      output.innerHTML = html;
     }
 
-    function generateEngrams() {
-      const level = parseInt(document.getElementById("engramLevel").value);
-      if (!level || level < 1 || level > 1000) {
-        alert("يرجى إدخال مستوى صحيح (1 - 1000)");
-        return;
-      }
-      let result = "OverridePlayerLevelEngramPoints=0\n";
-      for (let i = 1; i <= level; i++) {
-        let value = 8;
-        if (i >= 10 && i < 20) value = 14;
-        else if (i >= 20 && i < 30) value = 18;
-        else if (i >= 30 && i < 40) value = 24;
-        else if (i >= 40 && i < 50) value = 28;
-        else if (i >= 50 && i < 60) value = 36;
-        else if (i >= 60 && i < 73) value = 50;
-        else if (i >= 73 && i < 81) value = 70;
-        else if (i >= 81 && i < 87) value = 80;
-        else if (i >= 87 && i < 92) value = 100;
-        else if (i >= 92 && i < 97) value = 110;
-        else if (i >= 97 && i < 99) value = 125;
-        else if (i === 99) value = 135;
-        else if (i === 100) value = 120;
-        else if (i > 100) value = 220;
-        result += `OverridePlayerLevelEngramPoints=${value}\n`;
-      }
-      document.getElementById("engramCode").value = result.trim();
+    function removeResource(index) {
+      const item = document.querySelector(`.editable[data-index='${index}']`);
+      if (item) item.remove();
     }
 
-    function copyXPResults() {
-      const player = document.getElementById("playerXpCode").innerText;
-      const dino = document.getElementById("dinoXpCode").innerText;
-      const text = `OverrideMaxExperiencePointsPlayer=70368744177664\n${player}\n${dino}`;
-      navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ النتائج!"));
+    function addResource() {
+      const container = document.getElementById("editableList");
+      const idx = container.children.length;
+      const div = document.createElement("div");
+      div.className = "editable";
+      div.setAttribute("data-index", idx);
+      div.innerHTML = `
+        <input type='text' placeholder='اسم المورد' />
+        <input type='number' placeholder='الكمية' />
+        <button onclick='this.parentElement.remove()'>🗑️</button>`;
+      container.appendChild(div);
     }
 
-    function copyGeneratedCode() {
-      const code = document.getElementById("generatedCode").value;
-      navigator.clipboard.writeText(code).then(() => alert("✅ تم نسخ الكود!"));
+    function updateCraftingList() {
+      const items = document.querySelectorAll("#editableList .editable");
+      let summary = "<h4>📦 الموارد بعد التخصيص:</h4><ul>";
+      items.forEach(div => {
+        const name = div.querySelector("input[type=text]").value.trim();
+        const amount = div.querySelector("input[type=number]").value.trim();
+        if (name && amount) {
+          summary += `<li>${name}: ${amount}</li>`;
+        }
+      });
+      summary += "</ul>";
+      document.getElementById("craftResults").insertAdjacentHTML("beforeend", summary);
     }
 
-    function copyEngrams() {
-      const code = document.getElementById("engramCode").value;
-      navigator.clipboard.writeText(code).then(() => alert("✅ تم نسخ الإنقرامز!"));
+    function copyCraftList() {
+      const items = document.querySelectorAll("#editableList .editable");
+      let text = "";
+      items.forEach(div => {
+        const name = div.querySelector("input[type=text]").value.trim();
+        const amount = div.querySelector("input[type=number]").value.trim();
+        if (name && amount) {
+          text += `${name}: ${amount}\n`;
+        }
+      });
+      navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ الموارد!"));
     }
   </script>
 </body>
