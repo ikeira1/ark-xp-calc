@@ -40,6 +40,7 @@
       color: #0a84ff;
       text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
     }
     .container {
       max-width: 800px;
@@ -86,6 +87,7 @@
     }
     .section {
       margin-bottom: 40px;
+      display: none;
     }
     .editable {
       display: flex;
@@ -115,10 +117,10 @@
 
   <nav>
     <ul>
-      <li><a href="#levelTool">🔧 توليد اللفلات</a></li>
-      <li><a href="#xpTool">💡 حساب الـ XP</a></li>
-      <li><a href="#engramTool">🎓 توليد الإنقرامز</a></li>
-      <li><a href="#craftingTool">🛠️ بحث عن الكرافت</a></li>
+      <li><a onclick="showSection('levelTool')">🔧 توليد اللفلات</a></li>
+      <li><a onclick="showSection('xpTool')">💡 حساب الـ XP</a></li>
+      <li><a onclick="showSection('engramTool')">🎓 توليد الإنقرامز</a></li>
+      <li><a onclick="showSection('craftingTool')">🛠️ بحث عن الكرافت</a></li>
     </ul>
   </nav>
 
@@ -129,9 +131,32 @@
       <button onclick="searchCraftItem()">🔍 بحث</button>
       <div id="craftResults"></div>
     </section>
+
+    <section class="section" id="levelTool">
+      <h2>📈 أداة توليد مستويات اللاعبين والديناصورات</h2>
+      <p>💡 سيتم إضافتها لاحقًا</p>
+    </section>
+
+    <section class="section" id="xpTool">
+      <h2>⚡ أداة حساب XP</h2>
+      <p>💡 سيتم إضافتها لاحقًا</p>
+    </section>
+
+    <section class="section" id="engramTool">
+      <h2>🎓 أداة توليد الإنقرامز</h2>
+      <p>💡 سيتم إضافتها لاحقًا</p>
+    </section>
   </div>
 
   <script>
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      const section = document.getElementById(id);
+      if (section) section.style.display = 'block';
+    }
+
+    showSection('craftingTool');
+
     const craftingData = {
       fabricator: [
         { item: "Metal Ingot", amount: 35 },
@@ -139,6 +164,13 @@
         { item: "Crystal", amount: 15 },
         { item: "Oil", amount: 10 },
         { item: "Sparkpowder", amount: 50 }
+      ],
+      industrialforge: [
+        { item: "Cementing Paste", amount: 250 },
+        { item: "Crystal", amount: 250 },
+        { item: "Oil", amount: 400 },
+        { item: "Polymer", amount: 600 },
+        { item: "Metal Ingot", amount: 2500 }
       ]
     };
 
@@ -164,7 +196,7 @@
       });
       html += `</div>
         <button onclick='addResource()'>➕ إضافة مورد</button>
-        <button onclick='updateCraftingList()'>💾 تحديث</button>
+        <button onclick='updateCraftingList("${input}")'>💾 تحديث</button>
         <button class='copy-button' onclick='copyCraftList()'>📋 نسخ</button>
       `;
       output.innerHTML = html;
@@ -188,18 +220,22 @@
       container.appendChild(div);
     }
 
-    function updateCraftingList() {
+    function updateCraftingList(itemName) {
       const items = document.querySelectorAll("#editableList .editable");
-      let summary = "<h4>📦 الموارد بعد التخصيص:</h4><ul>";
+      let iniText = `ConfigOverrideItemCraftingCosts=(ItemClassString=\"${itemName}_C\",BaseCraftingResourceRequirements=(`;
+      let resourceList = [];
+
       items.forEach(div => {
         const name = div.querySelector("input[type=text]").value.trim();
         const amount = div.querySelector("input[type=number]").value.trim();
         if (name && amount) {
-          summary += `<li>${name}: ${amount}</li>`;
+          resourceList.push(`(ResourceItemTypeString=\"${name}_C\",BaseResourceRequirement=${amount})`);
         }
       });
-      summary += "</ul>";
-      document.getElementById("craftResults").insertAdjacentHTML("beforeend", summary);
+
+      iniText += resourceList.join(",") + "))";
+      const result = `<h4>🔧 كود تعديل الكرافت:</h4><code>${iniText}</code>`;
+      document.getElementById("craftResults").insertAdjacentHTML("beforeend", result);
     }
 
     function copyCraftList() {
