@@ -1,86 +1,107 @@
-function showSection(id) {
-  document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
+// التنقل بين الأقسام
 document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
-    showSection(this.dataset.section);
+  link.addEventListener("click", function () {
+    document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(this.dataset.section).classList.add("active");
   });
 });
 
+// توليد اللفلات
 function generateLevels() {
-  const count = parseInt(document.getElementById("levelCount").value);
-  if (!count || count < 1) return;
+  const level = parseInt(document.getElementById("levelCount").value);
+  if (isNaN(level) || level < 1) return;
 
-  const result = [];
-  for (let i = 0; i <= count; i++) {
-    result.push(`ExperiencePointsForLevel[${i}]=${5 + i * i}`);
+  let result = `LevelExperienceRampOverrides=(`;
+  let xp = 5;
+  for (let i = 0; i <= level; i++) {
+    result += `ExperiencePointsForLevel[${i}]=${xp}`;
+    if (i !== level) result += ",";
+    xp += Math.floor(xp * 0.15) + 1;
   }
-  const finalCode = `LevelExperienceRampOverrides=(${result.join(",")})`;
-  document.getElementById("levelResult").textContent = finalCode;
+  result += `)`;
+  document.getElementById("levelResult").textContent = result;
 }
 
+// نسخ
 function copyResult(id) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text);
+  const content = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(content);
 }
 
+// حساب XP
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
-  const matches = [...input.matchAll(/ExperiencePointsForLevel\[\d+\]=(\d+)/g)];
-  let totalXP = 0;
+  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
+  if (!matches) return;
 
-  matches.forEach(m => {
-    totalXP += parseInt(m[1]);
-  });
+  const values = matches.map(m => parseInt(m.split("=")[1]));
+  const totalXP = values.reduce((a, b) => a + b, 0);
+  const levelCount = values.length;
 
-  const levelCount = matches.length;
-  const resultText = `عدد المستويات: ${levelCount}\nالمجموع الكلي للـ XP: ${totalXP}`;
-  document.getElementById("xpResult").textContent = resultText;
+  const result = `
+عدد اللفلات: ${levelCount}
+مجموع XP: ${totalXP}
+
+OverrideMaxExperiencePointsPlayer=70368744177664
+OverrideMaxExperiencePointsPlayer=${totalXP}
+OverrideMaxExperiencePointsDino=2147483647
+`;
+  document.getElementById("xpResult").textContent = result.trim();
 }
 
+// Engrams
 function generateEngrams() {
-  const level = parseInt(document.getElementById("engramsLevel").value);
-  if (!level || level < 1) return;
+  const lvl = parseInt(document.getElementById("engramsLevel").value);
+  if (isNaN(lvl) || lvl < 1) return;
 
   let result = "";
-  for (let i = 1; i <= level; i++) {
-    result += `OverridePlayerLevelEngramPoints=${i * 10}\n`;
+  for (let i = 1; i <= lvl; i++) {
+    result += `OverridePlayerLevelEngramPoints=${i * 5}\n`;
   }
-  document.getElementById("engramsResult").textContent = result.trim();
+  document.getElementById("engramsResult").textContent = result;
 }
 
-// الكرافت
+// تعديل الكرافت
 function addResource() {
   const container = document.getElementById("resourcesContainer");
   const row = document.createElement("div");
   row.className = "resource-row";
-  row.innerHTML = `
-    <input placeholder="ID المورد (مثال: PrimalItemResource_Wood_C)">
-    <input type="number" placeholder="الكمية">
-    <button onclick="this.parentElement.remove()">❌</button>
-  `;
+
+  const idInput = document.createElement("input");
+  idInput.placeholder = "ID المورد";
+
+  const qtyInput = document.createElement("input");
+  qtyInput.type = "number";
+  qtyInput.placeholder = "الكمية";
+
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "❌";
+  removeBtn.onclick = () => row.remove();
+
+  row.appendChild(idInput);
+  row.appendChild(qtyInput);
+  row.appendChild(removeBtn);
+
   container.appendChild(row);
 }
 
 function generateCraftingCode() {
-  const itemId = document.getElementById("craftItemId").value.trim();
-  if (!itemId) return;
+  const itemId = document.getElementById("itemIdInput").value.trim();
+  const resources = document.querySelectorAll(".resource-row");
 
-  const rows = document.querySelectorAll(".resource-row");
-  const resources = [];
+  if (!itemId || resources.length === 0) return;
 
-  rows.forEach(row => {
-    const inputs = row.querySelectorAll("input");
-    const id = inputs[0].value.trim();
-    const amount = parseFloat(inputs[1].value);
-    if (id && amount) {
-      resources.push(`(ResourceItemTypeString="${id}",BaseResourceRequirement=${amount},bCraftingRequireExactResourceType=false)`);
+  let code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=(`;
+
+  resources.forEach((row, index) => {
+    const id = row.children[0].value.trim();
+    const qty = row.children[1].value.trim();
+    if (id && qty) {
+      code += `(ResourceItemTypeString="${id}",BaseResourceRequirement=${qty},bCraftingRequireExactResourceType=false)`;
+      if (index !== resources.length - 1) code += ",";
     }
   });
 
-  const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=(${resources.join(",")}))`;
-  document.getElementById("craftingResult").textContent = code;
+  code += `))`;
+  document.getElementById("craftResult").textContent = code;
 }
