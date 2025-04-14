@@ -1,86 +1,90 @@
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  background-color: #1c1c1e;
+  direction: rtl;
+  font-family: 'Tahoma', sans-serif;
+  background-color: #1e1e2f;
   color: #fff;
-  padding-bottom: 100px;
+  margin: 0;
+  padding: 0;
 }
+
 header {
-  background-color: #29292c;
+  background: #2c3e50;
   padding: 15px;
   text-align: center;
 }
-h1 {
-  margin: 10px 0;
+
+.support-buttons {
+  margin-top: 10px;
 }
-nav button {
+
+.support-btn {
+  background-color: #27ae60;
+  padding: 8px 15px;
   margin: 5px;
-  padding: 10px 15px;
-  background-color: #4caf50;
-  border: none;
   color: white;
-  cursor: pointer;
   border-radius: 5px;
+  text-decoration: none;
 }
-nav button:hover {
-  background-color: #45a049;
+
+nav {
+  background: #34495e;
+  padding: 10px;
+  text-align: center;
 }
-.section {
+
+nav button {
+  background: #2980b9;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tool-section {
   padding: 20px;
 }
-input, textarea {
+
+.tool-section input, textarea {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5px;
-  border: none;
-  font-family: monospace;
+  font-size: 15px;
 }
+
 button {
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  background-color: #007bff;
-  border: none;
+  background-color: #16a085;
   color: white;
-}
-button:hover {
-  background-color: #0056b3;
-}
-textarea {
-  height: 150px;
-  resize: vertical;
-}
-.accounts {
-  margin: 10px 0;
-}
-.accounts a {
-  margin: 0 10px;
-  color: gold;
-  font-weight: bold;
-  text-decoration: none;
-}
-.stats-button {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background-color: #f39c12;
   padding: 10px 15px;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
-.stats-button:hover {
-  background-color: #e67e22;
-}
-.phantom-link {
+
+.external-link {
   display: inline-block;
   margin-top: 10px;
-  background-color: #9b59b6;
-  padding: 8px 12px;
-  color: white;
+  color: #00bcd4;
   text-decoration: none;
+}
+
+.fixed-stats-button {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  background-color: #f39c12;
+  padding: 10px 15px;
   border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 1000;
+}
+
+footer {
+  background-color: #2c3e50;
+  text-align: center;
+  padding: 10px;
+  color: #aaa;
 }
