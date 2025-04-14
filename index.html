@@ -8,11 +8,11 @@
 </head>
 <body>
   <div class="top-banner">
-    <h2>🎮 دعمك يساعدنا على تطوير أدوات ARK!</h2>
+    <h2>🚀 ادعمني وخلّك سبب في تطوير الأداة!</h2>
     <ul class="social-links">
-      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">📺 يوتيوب</a></li>
+      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">🎥 يوتيوب</a></li>
       <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 ديسكورد</a></li>
-      <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دعم عبر دكان</a></li>
+      <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دكان تيب</a></li>
     </ul>
   </div>
 
@@ -22,14 +22,13 @@
       <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
       <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
       <li><a href="#" data-section="crafting">🛠️ تعديل الكرافت</a></li>
-      <li><a href="#" data-section="stats">💪 الستاتس</a></li>
     </ul>
   </nav>
 
   <div class="container">
     <div id="levels" class="section active">
       <h3>🔧 توليد اللفلات</h3>
-      <input id="levelCount" type="number" placeholder="كم لفل تبي؟" />
+      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
       <button onclick="generateLevels()">توليد الكود</button>
       <button onclick="copyResult('levelResult')">نسخ</button>
       <pre id="levelResult"></pre>
@@ -45,7 +44,7 @@
 
     <div id="engrams" class="section">
       <h3>📘 توليد Engrams</h3>
-      <input id="engramsLevel" type="number" placeholder="أدخل اللفل المطلوب" />
+      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
       <button onclick="generateEngrams()">توليد Engrams</button>
       <button onclick="copyResult('engramsResult')">نسخ</button>
       <pre id="engramsResult"></pre>
@@ -53,34 +52,23 @@
 
     <div id="crafting" class="section">
       <h3>🛠️ تعديل وصفات الصناعة</h3>
-      <input type="text" id="itemIdInput" placeholder="أدخل ID العنصر (مثلاً: PrimalItemStructure_Fabricator_C)" />
-      <div id="resourcesContainer"></div>
-      <button onclick="addResource()">➕ إضافة مورد</button>
-      <button onclick="generateCraftCode()">توليد الكود</button>
-      <button onclick="copyResult('craftResult')">نسخ</button>
-      <pre id="craftResult"></pre>
-    </div>
+      <label>📦 أدخل ID العنصر الأساسي:</label>
+      <input type="text" id="mainItemId" placeholder="مثال: PrimalItemStructure_Fabricator_C" />
 
-    <div id="stats" class="section">
-      <h3>💪 إعدادات الستاتس</h3>
-      <div class="stats-section">
-        <h4>اللاعب</h4>
-        <div id="playerStats" class="stats-group"></div>
-        <h4>الحيوانات المروضة</h4>
-        <div id="tamedStats" class="stats-group"></div>
-        <h4>الحيوانات البرية</h4>
-        <div id="wildStats" class="stats-group"></div>
-        <button onclick="generateStatsCode()">توليد الكود</button>
-        <button onclick="copyResult('statsResult')">نسخ</button>
-        <pre id="statsResult"></pre>
-      </div>
+      <div id="resourcesContainer"></div>
+
+      <button onclick="addResource()">➕ إضافة مورد</button>
+      <button onclick="generateCraftingCode()">✨ توليد الكود</button>
+      <button onclick="copyResult('craftingResult')">📋 نسخ الكود</button>
+
+      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="phantom-link">🔍 ابحث عن ID في Ark Phantom</a>
+
+      <pre id="craftingResult"></pre>
     </div>
   </div>
 
-  <!-- زر الانتقال إلى موقع الستاتس -->
-  <a class="external-link" href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank">
-    ⚙️ أداة الستاتس (متقدمة)
-  </a>
+  <!-- زر الانتقال لأداة الستاتس -->
+  <a class="stats-link" href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank">⚙️ أداة الستاتس</a>
 
   <script src="script.js"></script>
 </body>
