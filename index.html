@@ -22,7 +22,6 @@
       <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
       <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
       <li><a href="#" data-section="crafting">🔍 تعديل وصفات الكرافت</a></li>
-      <li><a href="#" data-section="stats">📊 تعديل الستاتس</a></li>
     </ul>
   </nav>
 
@@ -52,24 +51,19 @@
     </div>
 
     <div id="crafting" class="section">
-      <h3>🔍 البحث وتعديل وصفات الصناعة</h3>
+      <h3>🔍 البحث وتعديل وصفات الكرافت</h3>
       <input type="text" id="searchCraftInput" placeholder="ابحث عن عنصر (مثل Fabricator)" />
       <button onclick="searchCraft()">بحث</button>
       <div id="craftResults"></div>
     </div>
-
-    <div id="stats" class="section">
-      <h3>📊 تعديل الستاتس</h3>
-      <div id="statsContainer"></div>
-      <button onclick="generateStats()">توليد الكود</button>
-      <button onclick="copyResult('statsResult')">نسخ</button>
-      <pre id="statsResult"></pre>
-    </div>
   </div>
 
-  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx"
-     target="_blank" class="stats-link">🔧 أداة الستاتس</a>
+  <!-- زر أداة الستاتس الرسمية -->
+  <a class="fixed-link" href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank">
+    ⚙️ أداة الستاتس الرسمية
+  </a>
 
+  <datalist id="resourceList"></datalist>
   <script src="script.js"></script>
 </body>
 </html>
