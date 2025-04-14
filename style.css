@@ -1,19 +1,16 @@
 body {
-  font-family: Tahoma, Arial, sans-serif;
-  background-color: #1c1c1c;
+  font-family: Tahoma, sans-serif;
+  background-color: #1a1a1a;
   color: #fff;
   margin: 0;
+  padding: 0;
   direction: rtl;
 }
 
 .top-banner {
-  background-color: #333;
   text-align: center;
-  padding: 10px;
-}
-
-.top-banner h2 {
-  margin: 5px;
+  background-color: #222;
+  padding: 20px;
 }
 
 .social-links {
@@ -24,30 +21,39 @@ body {
   gap: 20px;
 }
 
-.social-links a {
-  color: #00bfff;
-  font-weight: bold;
+.social-links li a {
+  color: #00c3ff;
   text-decoration: none;
-}
-
-nav {
-  background-color: #111;
-  padding: 10px;
+  font-weight: bold;
 }
 
 nav ul {
   list-style: none;
+  background: #111;
+  padding: 0;
+  margin: 0;
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin: 0;
-  padding: 0;
+  flex-wrap: wrap;
 }
 
-nav a {
+nav ul li {
+  margin: 5px;
+}
+
+nav ul li a {
+  display: block;
+  padding: 10px 20px;
+  background: #222;
   color: #fff;
   text-decoration: none;
-  font-weight: bold;
+  border-radius: 5px;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+  background: #00c3ff;
+  color: black;
 }
 
 .container {
@@ -62,48 +68,27 @@ nav a {
   display: block;
 }
 
-input, textarea {
+input, textarea, button {
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
   width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: none;
-  font-size: 16px;
-}
-
-button {
-  padding: 8px 15px;
-  margin: 5px;
-  background-color: #00bfff;
-  border: none;
-  border-radius: 5px;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
+  max-width: 500px;
 }
 
 pre {
-  background-color: #2a2a2a;
-  padding: 10px;
-  white-space: pre-wrap;
+  background: #333;
+  padding: 15px;
   border-radius: 5px;
-  margin-top: 10px;
-}
-
-.resource-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.resource-row input {
-  width: 45%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .phantom-link {
   display: inline-block;
   margin-top: 10px;
-  color: #00ffcc;
-  text-decoration: none;
+  color: #00c3ff;
   font-weight: bold;
 }
