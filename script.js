@@ -1,110 +1,74 @@
-document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', function () {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    const target = this.getAttribute('data-section');
-    document.getElementById(target).classList.add('active');
-  });
-});
+const recipes = {
+    Fabricator: [
+        { id: "PrimalItemResource_Wood_C", quantity: 35 },
+        { id: "PrimalItemResource_MetalIngot_C", quantity: 20 }
+    ],
+    Smithy: [
+        { id: "PrimalItemResource_Stone_C", quantity: 50 },
+        { id: "PrimalItemResource_Wood_C", quantity: 30 }
+    ]
+};
 
-function generateLevels() {
-  const count = parseInt(document.getElementById("levelCount").value);
-  let code = `LevelExperienceRampOverrides=(ExperiencePointsForLevel[0]=1`;
-  let xp = 1;
-  for (let i = 1; i <= count; i++) {
-    xp += Math.floor(i * 10 + 50);
-    code += `,ExperiencePointsForLevel[${i}]=${xp}`;
-  }
-  code += ")";
-  document.getElementById("levelResult").textContent = code;
+function searchItem() {
+    const itemName = document.getElementById("searchInput").value.trim();
+    const resources = recipes[itemName];
+    const container = document.getElementById("resourcesContainer");
+    container.innerHTML = "";
+
+    if (!resources) {
+        alert("العنصر غير موجود. أضف الموارد يدوياً.");
+        return;
+    }
+
+    resources.forEach((res, index) => {
+        const row = createResourceRow(res.id, res.quantity);
+        container.appendChild(row);
+    });
 }
 
-function calculateXP() {
-  const input = document.getElementById("xpInput").value;
-  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
-  let sum = 0;
-  if (matches) {
-    sum = matches.reduce((acc, item) => acc + parseInt(item.split("=")[1]), 0);
-  }
-  document.getElementById("xpResult").textContent =
-    `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${sum}\nOverrideMaxExperiencePointsDino=${sum}`;
-}
+function createResourceRow(id = "", quantity = 1) {
+    const row = document.createElement("div");
+    row.className = "resource-row";
 
-function generateEngrams() {
-  const level = parseInt(document.getElementById("engramsLevel").value);
-  let result = "";
-  const map = [0, 8, 14, 18, 24, 28, 36, 50, 70, 80, 100, 110, 125, 135, 120, 220, 260];
-  for (let i = 0; i <= level; i++) {
-    let val = 0;
-    if (i <= 9) val = 8;
-    else if (i <= 19) val = 14;
-    else if (i <= 29) val = 18;
-    else if (i <= 39) val = 24;
-    else if (i <= 49) val = 28;
-    else if (i <= 59) val = 36;
-    else if (i <= 71) val = 50;
-    else if (i <= 79) val = 70;
-    else if (i <= 85) val = 80;
-    else if (i <= 90) val = 100;
-    else if (i <= 95) val = 110;
-    else if (i <= 97) val = 125;
-    else if (i <= 99) val = 135;
-    else if (i <= 101) val = 120;
-    else val = 220;
-    result += `OverridePlayerLevelEngramPoints=${val}\n`;
-  }
-  document.getElementById("engramsResult").textContent = result;
-}
+    const quantityInput = document.createElement("input");
+    quantityInput.type = "number";
+    quantityInput.placeholder = "الكمية";
+    quantityInput.value = quantity;
 
-function copyResult(id) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text);
-}
+    const idInput = document.createElement("input");
+    idInput.placeholder = "Resource ID";
+    idInput.value = id;
 
-function searchCraft() {
-  const name = document.getElementById("searchCraftInput").value;
-  if (!name) return;
-  const itemId = name.toLowerCase().replace(/\s+/g, "_") + "_c";
-  const baseID = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=[`;
-  const example = [
-    { id: "PrimalItemResource_Wood_C", qty: 35 },
-    { id: "PrimalItemResource_MetalIngot_C", qty: 20 }
-  ];
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "❌";
+    deleteButton.onclick = () => row.remove();
 
-  let fields = example.map((e, index) => {
-    return `
-      <div class="resource-row">
-        <input placeholder="Resource ID" value="${e.id}">
-        <input type="number" value="${e.qty}">
-      </div>
-    `;
-  }).join("");
+    row.appendChild(quantityInput);
+    row.appendChild(idInput);
+    row.appendChild(deleteButton);
 
-  fields += `
-    <button onclick="addResource()">➕ إضافة مورد</button>
-    <button onclick="generateCraftCode('${itemId}')">🎯 توليد الكود</button>
-    <pre id="finalCraftCode"></pre>
-  `;
-
-  document.getElementById("craftResults").innerHTML = fields;
+    return row;
 }
 
 function addResource() {
-  const div = document.createElement("div");
-  div.className = "resource-row";
-  div.innerHTML = `<input placeholder="Resource ID"><input type="number" value="1">`;
-  document.getElementById("craftResults").insertBefore(div, document.querySelector("#craftResults button"));
+    const container = document.getElementById("resourcesContainer");
+    const row = createResourceRow();
+    container.appendChild(row);
 }
 
-function generateCraftCode(itemId) {
-  const inputs = document.querySelectorAll("#craftResults .resource-row");
-  let parts = [];
-  inputs.forEach(row => {
-    const id = row.children[0].value;
-    const qty = parseInt(row.children[1].value);
-    if (id && qty > 0) {
-      parts.push(`(ResourceItemTypeString="${id}",BaseResourceRequirement=${qty})`);
-    }
-  });
-  const finalCode = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=[${parts.join(",")}])`;
-  document.getElementById("finalCraftCode").textContent = finalCode;
+function generateCode() {
+    const container = document.getElementById("resourcesContainer");
+    const rows = container.querySelectorAll(".resource-row");
+
+    const codes = [];
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        const quantity = inputs[0].value.trim();
+        const id = inputs[1].value.trim();
+        if (quantity && id) {
+            codes.push(`(${id}=${quantity})`);
+        }
+    });
+
+    document.getElementById("outputCode").textContent = codes.join(",");
 }
