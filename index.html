@@ -8,27 +8,27 @@
 </head>
 <body>
   <div class="top-banner">
-    <h2>🚀 دعمك يساعدنا على التطوير!</h2>
+    <h2>📢 دعمك يحفزنا نطور أكثر!</h2>
     <ul class="social-links">
-      <li>🎥 <a href="https://www.youtube.com/@ikeira1" target="_blank">يوتيوب</a></li>
-      <li>💬 <a href="https://discord.gg/2rMzBv6zRv" target="_blank">الديسكورد</a></li>
-      <li>💰 <a href="https://tip.dokan.sa/keira" target="_blank">دكان تيب</a></li>
+      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">🎥 قناتي على اليوتيوب</a></li>
+      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 مجتمع الديسكورد</a></li>
+      <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دعم عبر دكان تيب</a></li>
     </ul>
   </div>
 
   <nav>
     <ul>
-      <li><a href="#" data-section="levels">🎯 توليد اللفلات</a></li>
+      <li><a href="#" data-section="levels">🔧 توليد اللفلات</a></li>
       <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
       <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
-      <li><a href="#" data-section="crafting">🛠 تعديل الكرافت</a></li>
+      <li><a href="#" data-section="crafting">🔍 تعديل وصفات الصناعة</a></li>
     </ul>
   </nav>
 
   <div class="container">
     <div id="levels" class="section active">
-      <h3>🎯 توليد اللفلات</h3>
-      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات (حتى 1000)" />
+      <h3>🔧 توليد اللفلات</h3>
+      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
       <button onclick="generateLevels()">توليد الكود</button>
       <button onclick="copyResult('levelResult')">نسخ</button>
       <pre id="levelResult"></pre>
@@ -44,21 +44,22 @@
 
     <div id="engrams" class="section">
       <h3>📘 توليد Engrams حسب اللفل</h3>
-      <input id="engramsLevel" type="number" placeholder="أدخل عدد اللفلات..." />
+      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
       <button onclick="generateEngrams()">توليد Engrams</button>
       <button onclick="copyResult('engramsResult')">نسخ</button>
       <pre id="engramsResult"></pre>
     </div>
 
     <div id="crafting" class="section">
-      <h3>🛠 تعديل وصفات الصناعة</h3>
-      <input id="craftItemID" type="text" placeholder="أدخل ID العنصر (مثال: PrimalItemStructure_Turret_C)" />
-      <div id="resourceList"></div>
-      <button onclick="addResourceField()">➕ إضافة مورد</button>
-      <button onclick="generateCraftCode()">🎯 توليد كود الكرافت</button>
-      <button onclick="copyResult('craftResult')">نسخ</button>
-      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="phantom-link">🔗 نسخ ID من موقع Ark Phantom</a>
-      <pre id="craftResult"></pre>
+      <h3>🔍 تعديل وصفات الصناعة</h3>
+      <label for="itemID">ID العنصر الأساسي:</label>
+      <input type="text" id="itemID" placeholder="مثال: PrimalItemStructure_Fabricator_C" />
+      <button onclick="addResourceRow()">إضافة مورد</button>
+      <div id="resourcesContainer"></div>
+      <button onclick="generateCraftingCode()">توليد الكود</button>
+      <button onclick="copyResult('craftingResult')">نسخ</button>
+      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="phantom-link">🔗 موقع Ark Phantom للأكواد</a>
+      <pre id="craftingResult"></pre>
     </div>
   </div>
 
