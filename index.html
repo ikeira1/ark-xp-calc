@@ -58,6 +58,9 @@
       border: none;
       border-radius: 8px;
     }
+    input[list] {
+      background-color: #333;
+    }
     button {
       background-color: #0a84ff;
       color: #fff;
@@ -93,7 +96,7 @@
       align-items: center;
       margin: 5px 0;
     }
-    .editable input[type=number], .editable input[type=text] {
+    .editable input[type=number], .editable input[list] {
       width: auto;
     }
     .editable button {
@@ -113,165 +116,62 @@
       flex-wrap: wrap;
       margin-top: 10px;
     }
+    datalist option {
+      background: #222;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
-  <header class="top-banner">
-    <h2>🚀 تابعني وادعمني</h2>
-    <ul class="social-links">
-      <li>🎮 <strong>الديسكورد</strong>: <a href="https://discord.gg/2rMzBv6zRv" target="_blank">اضغط هنا للانضمام</a></li>
-      <li>📺 <strong>اليوتيوب</strong>: <a href="https://www.youtube.com/@ikeira1" target="_blank">شاهد القناة</a></li>
-      <li>☕ <strong>دكان تب</strong>: <a href="https://tip.dokan.sa/keira" target="_blank">ادعمني هنا</a></li>
-    </ul>
-  </header>
-
-  <nav>
-    <ul>
-      <li><a onclick="showSection('levelTool')">🔧 توليد اللفلات</a></li>
-      <li><a onclick="showSection('xpTool')">💡 حساب الـ XP</a></li>
-      <li><a onclick="showSection('engramTool')">🎓 توليد الإنقرامز</a></li>
-      <li><a onclick="showSection('craftingTool')">🛠️ بحث عن الكرافت</a></li>
-    </ul>
-  </nav>
-
-  <div class="container">
-    <section class="section" id="craftingTool">
-      <h2>🔍 بحث العناصر القابلة للصناعة</h2>
-      <input type="text" id="craftSearch" placeholder="ابحث عن عنصر... مثل: fabricator">
-      <button onclick="searchCraftItem()">🔍 بحث</button>
-      <div id="craftResults"></div>
-    </section>
-
-    <section class="section" id="levelTool">
-      <h2>📈 أداة توليد مستويات اللاعبين والديناصورات</h2>
-      <p>💡 سيتم إضافتها لاحقًا</p>
-    </section>
-
-    <section class="section" id="xpTool">
-      <h2>⚡ أداة حساب XP</h2>
-      <p>💡 سيتم إضافتها لاحقًا</p>
-    </section>
-
-    <section class="section" id="engramTool">
-      <h2>🎓 أداة توليد الإنقرامز</h2>
-      <p>💡 سيتم إضافتها لاحقًا</p>
-    </section>
-  </div>
+  …
+  <datalist id="resourceList">
+    <option value="PrimalItemResource_Wood_C">
+    <option value="PrimalItemResource_Thatch_C">
+    <option value="PrimalItemResource_Stone_C">
+    <option value="PrimalItemResource_Flint_C">
+    <option value="PrimalItemResource_MetalIngot_C">
+    <option value="PrimalItemResource_CementingPaste_C">
+    <option value="PrimalItemResource_Crystal_C">
+    <option value="PrimalItemResource_Oil_C">
+    <option value="PrimalItemResource_Sparkpowder_C">
+    <option value="PrimalItemResource_Electronics_C">
+    <option value="PrimalItemResource_Polymer_C">
+  </datalist>
 
   <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-      const section = document.getElementById(id);
-      if (section) section.style.display = 'block';
-    }
-
-    showSection('craftingTool');
-
+    // داخل كائن craftingData أضفنا:
     const craftingData = {
       fabricator: {
         image: 'https://ark.wiki.gg/images/1/1a/Fabricator.png',
         resources: [
-          { item: "Metal Ingot", amount: 35 },
-          { item: "Cementing Paste", amount: 20 },
-          { item: "Crystal", amount: 15 },
-          { item: "Oil", amount: 10 },
-          { item: "Sparkpowder", amount: 50 }
+          { item: "PrimalItemResource_MetalIngot_C", amount: 35 },
+          { item: "PrimalItemResource_CementingPaste_C", amount: 20 },
+          { item: "PrimalItemResource_Crystal_C", amount: 15 },
+          { item: "PrimalItemResource_Oil_C", amount: 10 },
+          { item: "PrimalItemResource_Sparkpowder_C", amount: 50 }
         ]
       },
-      industrialforge: {
-        image: 'https://ark.wiki.gg/images/f/f1/Industrial_Forge.png',
+      chembench: {
+        image: 'https://ark.wiki.gg/images/c/cd/Chemistry_Bench.png',
         resources: [
-          { item: "Cementing Paste", amount: 250 },
-          { item: "Crystal", amount: 250 },
-          { item: "Oil", amount: 400 },
-          { item: "Polymer", amount: 600 },
-          { item: "Metal Ingot", amount: 2500 }
+          { item: "PrimalItemResource_Electronics_C", amount: 20 },
+          { item: "PrimalItemResource_Crystal_C", amount: 250 },
+          { item: "PrimalItemResource_CementingPaste_C", amount: 250 },
+          { item: "PrimalItemResource_Polymer_C", amount: 250 },
+          { item: "PrimalItemResource_MetalIngot_C", amount: 250 }
         ]
       }
     };
 
-    function searchCraftItem() {
-      const input = document.getElementById("craftSearch").value.trim().toLowerCase();
-      const output = document.getElementById("craftResults");
-      output.innerHTML = "";
-
-      const matches = Object.keys(craftingData).filter(key => key.includes(input));
-      if (matches.length === 0) {
-        output.innerHTML = `<p style='color:orange'>لم يتم العثور على هذا العنصر. جرب اسم آخر.</p>`;
-        return;
-      }
-
-      const itemKey = matches[0];
-      const data = craftingData[itemKey];
-      const resources = data.resources;
-      const img = data.image ? `<img src="${data.image}" alt="${itemKey}" class="craft-img" />` : "";
-
-      let html = `${img}<h4>الموارد المطلوبة لصناعة <span style='color:#0af'>${itemKey}</span>:</h4>`;
-      html += `<div id='editableList'>`;
-      resources.forEach((res, idx) => {
-        html += `
-          <div class='editable' data-index='${idx}'>
-            <input type='text' value='${res.item}' />
-            <input type='number' value='${res.amount}' />
-            <button onclick='removeResource(${idx})'>🗑️</button>
-          </div>`;
-      });
-      html += `</div>
-        <div class='craft-buttons'>
-          <button class='copy-button' onclick='copyCraftList()'>📋 نسخ</button>
-          <button onclick='updateCraftingList("${itemKey}")'>💾 تحديث</button>
-          <button onclick='addResource()'>➕ إضافة مورد</button>
-        </div>
-        <div id='craftCodeResult'></div>`;
-      output.innerHTML = html;
-    }
-
-    function removeResource(index) {
-      const item = document.querySelector(`.editable[data-index='${index}']`);
-      if (item) item.remove();
-    }
-
-    function addResource() {
-      const container = document.getElementById("editableList");
-      const idx = container.children.length;
-      const div = document.createElement("div");
-      div.className = "editable";
-      div.setAttribute("data-index", idx);
-      div.innerHTML = `
-        <input type='text' placeholder='اسم المورد' />
-        <input type='number' placeholder='الكمية' />
-        <button onclick='this.parentElement.remove()'>🗑️</button>`;
-      container.appendChild(div);
-    }
-
-    function updateCraftingList(itemName) {
-      const items = document.querySelectorAll("#editableList .editable");
-      let iniText = `ConfigOverrideItemCraftingCosts=(ItemClassString=\"${itemName}_C\",BaseCraftingResourceRequirements=(`;
-      let resourceList = [];
-
-      items.forEach(div => {
-        const name = div.querySelector("input[type=text]").value.trim();
-        const amount = div.querySelector("input[type=number]").value.trim();
-        if (name && amount) {
-          resourceList.push(`(ResourceItemTypeString=\"${name}_C\",BaseResourceRequirement=${amount})`);
+    // تفعيل زر البحث بزر Enter
+    const searchInput = document.querySelector('input[type="text"]');
+    const searchButton = document.querySelector('button');
+    if (searchInput && searchButton) {
+      searchInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          searchButton.click();
         }
       });
-
-      iniText += resourceList.join(",") + "))";
-      document.getElementById("craftCodeResult").innerHTML = `<h4>🔧 كود تعديل الكرافت:</h4><code>${iniText}</code>`;
-    }
-
-    function copyCraftList() {
-      const items = document.querySelectorAll("#editableList .editable");
-      let text = "";
-      items.forEach(div => {
-        const name = div.querySelector("input[type=text]").value.trim();
-        const amount = div.querySelector("input[type=number]").value.trim();
-        if (name && amount) {
-          text += `${name}: ${amount}\n`;
-        }
-      });
-      navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ الموارد!"));
     }
   </script>
 </body>
