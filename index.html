@@ -123,7 +123,54 @@
   </style>
 </head>
 <body>
-  …
+  <div class="top-banner">
+    <h2>روابط الدعم</h2>
+    <ul class="social-links">
+      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">يوتيوب</a></li>
+      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">الديسكورد</a></li>
+      <li><a href="https://tip.dokan.sa/keira" target="_blank">دكان تيب</a></li>
+    </ul>
+  </div>
+
+  <nav>
+    <ul>
+      <li><a href="#levels">توليد اللفلات</a></li>
+      <li><a href="#xpcalc">حساب XP</a></li>
+      <li><a href="#engrams">توليد Engrams</a></li>
+      <li><a href="#crafting">البحث عن الكرافت</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div id="levels" class="section" style="display: block;">
+      <h3>🔧 توليد اللفلات</h3>
+      <textarea placeholder="أدخل عدد اللفلات المطلوب..."></textarea>
+      <button>توليد الكود</button>
+      <button class="copy-button">نسخ</button>
+    </div>
+
+    <div id="xpcalc" class="section">
+      <h3>📊 حساب XP</h3>
+      <textarea placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
+      <button>احسب</button>
+      <button class="copy-button">نسخ</button>
+    </div>
+
+    <div id="engrams" class="section">
+      <h3>📘 توليد Engrams حسب اللفل</h3>
+      <input type="number" placeholder="عدد اللفلات">
+      <button>توليد Engrams</button>
+      <button class="copy-button">نسخ</button>
+    </div>
+
+    <div id="crafting" class="section">
+      <h3>🔍 البحث عن عناصر قابلة للصناعة</h3>
+      <input type="text" placeholder="ابحث باسم العنصر...">
+      <button>بحث</button>
+      <div class="craft-results"></div>
+    </div>
+  </div>
+
   <datalist id="resourceList">
     <option value="PrimalItemResource_Wood_C">
     <option value="PrimalItemResource_Thatch_C">
@@ -139,7 +186,6 @@
   </datalist>
 
   <script>
-    // داخل كائن craftingData أضفنا:
     const craftingData = {
       fabricator: {
         image: 'https://ark.wiki.gg/images/1/1a/Fabricator.png',
@@ -163,7 +209,6 @@
       }
     };
 
-    // تفعيل زر البحث بزر Enter
     const searchInput = document.querySelector('input[type="text"]');
     const searchButton = document.querySelector('button');
     if (searchInput && searchButton) {
