@@ -1,107 +1,79 @@
-document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", function () {
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    document.getElementById(this.dataset.section).classList.add("active");
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    const target = e.target.getAttribute('data-section');
+    document.getElementById(target).classList.add('active');
   });
 });
 
-function copyResult(id) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text);
-  alert("تم النسخ!");
-}
-
 function generateLevels() {
   const count = parseInt(document.getElementById("levelCount").value);
-  let result = "LevelExperienceRampOverrides=(";
-  for (let i = 0; i < count; i++) {
-    result += `ExperiencePointsForLevel[${i}]=${(i + 1) * 5},`;
+  const result = [];
+  let xp = 0;
+  for (let i = 0; i <= count; i++) {
+    xp += Math.floor(5 + Math.pow(i, 1.5));
+    result.push(`ExperiencePointsForLevel[${i}]=${xp}`);
   }
-  result = result.slice(0, -1) + ")";
-  document.getElementById("levelResult").innerText = result;
+  const final = `LevelExperienceRampOverrides=(\n${result.join(",\n")}\n)`;
+  document.getElementById("levelResult").textContent = final;
 }
 
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
-  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
-  const values = matches ? matches.map(m => parseInt(m.split("=")[1])) : [];
-  const total = values.reduce((a, b) => a + b, 0);
-  const result = `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
-  document.getElementById("xpResult").innerText = result;
+  const regex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
+  let match, total = 0;
+  while ((match = regex.exec(input)) !== null) {
+    total += parseInt(match[1]);
+  }
+  document.getElementById("xpResult").textContent =
+    `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
 }
 
 function generateEngrams() {
-  const levels = parseInt(document.getElementById("engramsLevel").value);
-  const points = [
-    0, 8, 8, 8, 8, 8, 8, 8, 8, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
-    18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
-    24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
-    28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-    36, 36, 36, 36, 36, 36, 36, 36, 36, 36,
-    50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
-    50, 50, 50, 70, 70, 70, 70, 70, 70, 70,
-    70, 80, 80, 80, 80, 80, 80, 100, 100, 100,
-    100, 100, 110, 110, 110, 110, 110, 125, 125, 135,
-    135, 135, 120, 120
-  ];
-
+  const count = parseInt(document.getElementById("engramsLevel").value);
   let result = "";
-  for (let i = 0; i < levels; i++) {
-    const value = points[i] !== undefined ? points[i] : 220;
-    result += `OverridePlayerLevelEngramPoints=${value}\n`;
+  for (let i = 0; i <= count; i++) {
+    result += `OverridePlayerLevelEngramPoints=${Math.floor(8 + i / 5)}\n`;
   }
-  document.getElementById("engramsResult").innerText = result;
+  document.getElementById("engramsResult").textContent = result;
+}
+
+function copyResult(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text);
 }
 
 function searchCraft() {
-  const item = document.getElementById("searchCraftInput").value.toLowerCase();
-  fetch("craft-data.json")
-    .then(res => res.json())
-    .then(data => {
-      const found = data.find(entry => entry.name.toLowerCase().includes(item));
-      if (!found) return document.getElementById("craftResults").innerHTML = "لا يوجد نتيجة.";
+  const name = document.getElementById("searchCraftInput").value.trim();
+  if (!name) return;
 
-      const container = document.createElement("div");
-      container.innerHTML = `<h4>${found.name}</h4>`;
-      found.resources.forEach((r, i) => {
-        const row = document.createElement("div");
-        row.className = "resource-row";
-        row.innerHTML = `
-          <input type="text" value="${r.id}" />
-          <input type="number" value="${r.amount}" />
-          <button onclick="this.parentElement.remove()">حذف</button>
-        `;
-        container.appendChild(row);
-      });
-      const addBtn = document.createElement("button");
-      addBtn.innerText = "إضافة مورد";
-      addBtn.onclick = () => {
-        const row = document.createElement("div");
-        row.className = "resource-row";
-        row.innerHTML = `
-          <input type="text" placeholder="Resource ID" />
-          <input type="number" placeholder="الكمية" />
-          <button onclick="this.parentElement.remove()">حذف</button>
-        `;
-        container.appendChild(row);
-      };
+  const example = {
+    "fabricator": {
+      id: "PrimalItemStructure_Fabricator_C",
+      cost: [
+        { id: "PrimalItemResource_Wood_C", amount: 35 },
+        { id: "PrimalItemResource_Sparkpowder_C", amount: 20 },
+        { id: "PrimalItemResource_Crystal_C", amount: 25 },
+        { id: "PrimalItemResource_Oil_C", amount: 10 },
+        { id: "PrimalItemResource_Electronics_C", amount: 15 }
+      ]
+    }
+  };
 
-      const genBtn = document.createElement("button");
-      genBtn.innerText = "توليد الكود";
-      genBtn.onclick = () => {
-        const rows = container.querySelectorAll(".resource-row");
-        const resArr = Array.from(rows).map(row => {
-          const inputs = row.querySelectorAll("input");
-          return `(ResourceItemTypeString="${inputs[0].value}",BaseResourceRequirement=${inputs[1].value})`;
-        }).join(",");
-        const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${found.id}",BaseCraftingResourceRequirements=[${resArr}])`;
-        container.appendChild(document.createElement("pre")).innerText = code;
-        navigator.clipboard.writeText(code);
-      };
+  const item = example[name.toLowerCase()];
+  if (!item) {
+    document.getElementById("craftResults").innerHTML = `<p>❌ لم يتم العثور على العنصر المطلوب</p>`;
+    return;
+  }
 
-      container.appendChild(addBtn);
-      container.appendChild(genBtn);
-      document.getElementById("craftResults").innerHTML = "";
-      document.getElementById("craftResults").appendChild(container);
-    });
+  const output = `ConfigOverrideItemCraftingCosts=(ItemClassString="${item.id}",BaseCraftingResourceRequirements=[\n${
+    item.cost.map(c => `(ResourceItemTypeString="${c.id}",BaseResourceRequirement=${c.amount})`).join(",\n")
+  }\n])`;
+
+  document.getElementById("craftResults").innerHTML = `
+    <h4>✅ كود التعديل:</h4>
+    <pre>${output}</pre>
+    <button onclick="navigator.clipboard.writeText(\`${output}\`)">📋 نسخ الكود</button>
+  `;
 }
