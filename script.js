@@ -1,40 +1,56 @@
 document.querySelectorAll('nav a').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    const target = e.target.getAttribute('data-section');
+  link.addEventListener('click', function () {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const target = this.getAttribute('data-section');
     document.getElementById(target).classList.add('active');
   });
 });
 
 function generateLevels() {
   const count = parseInt(document.getElementById("levelCount").value);
-  const result = [];
-  let xp = 0;
-  for (let i = 0; i <= count; i++) {
-    xp += Math.floor(5 + Math.pow(i, 1.5));
-    result.push(`ExperiencePointsForLevel[${i}]=${xp}`);
+  let code = `LevelExperienceRampOverrides=(ExperiencePointsForLevel[0]=1`;
+  let xp = 1;
+  for (let i = 1; i <= count; i++) {
+    xp += Math.floor(i * 10 + 50);
+    code += `,ExperiencePointsForLevel[${i}]=${xp}`;
   }
-  const final = `LevelExperienceRampOverrides=(\n${result.join(",\n")}\n)`;
-  document.getElementById("levelResult").textContent = final;
+  code += ")";
+  document.getElementById("levelResult").textContent = code;
 }
 
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
-  const regex = /ExperiencePointsForLevel\[\d+\]=(\d+)/g;
-  let match, total = 0;
-  while ((match = regex.exec(input)) !== null) {
-    total += parseInt(match[1]);
+  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
+  let sum = 0;
+  if (matches) {
+    sum = matches.reduce((acc, item) => acc + parseInt(item.split("=")[1]), 0);
   }
   document.getElementById("xpResult").textContent =
-    `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=${total}`;
+    `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${sum}\nOverrideMaxExperiencePointsDino=${sum}`;
 }
 
 function generateEngrams() {
-  const count = parseInt(document.getElementById("engramsLevel").value);
+  const level = parseInt(document.getElementById("engramsLevel").value);
   let result = "";
-  for (let i = 0; i <= count; i++) {
-    result += `OverridePlayerLevelEngramPoints=${Math.floor(8 + i / 5)}\n`;
+  const map = [0, 8, 14, 18, 24, 28, 36, 50, 70, 80, 100, 110, 125, 135, 120, 220, 260];
+  for (let i = 0; i <= level; i++) {
+    let val = 0;
+    if (i <= 9) val = 8;
+    else if (i <= 19) val = 14;
+    else if (i <= 29) val = 18;
+    else if (i <= 39) val = 24;
+    else if (i <= 49) val = 28;
+    else if (i <= 59) val = 36;
+    else if (i <= 71) val = 50;
+    else if (i <= 79) val = 70;
+    else if (i <= 85) val = 80;
+    else if (i <= 90) val = 100;
+    else if (i <= 95) val = 110;
+    else if (i <= 97) val = 125;
+    else if (i <= 99) val = 135;
+    else if (i <= 101) val = 120;
+    else val = 220;
+    result += `OverridePlayerLevelEngramPoints=${val}\n`;
   }
   document.getElementById("engramsResult").textContent = result;
 }
@@ -45,35 +61,50 @@ function copyResult(id) {
 }
 
 function searchCraft() {
-  const name = document.getElementById("searchCraftInput").value.trim();
+  const name = document.getElementById("searchCraftInput").value;
   if (!name) return;
+  const itemId = name.toLowerCase().replace(/\s+/g, "_") + "_c";
+  const baseID = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=[`;
+  const example = [
+    { id: "PrimalItemResource_Wood_C", qty: 35 },
+    { id: "PrimalItemResource_MetalIngot_C", qty: 20 }
+  ];
 
-  const example = {
-    "fabricator": {
-      id: "PrimalItemStructure_Fabricator_C",
-      cost: [
-        { id: "PrimalItemResource_Wood_C", amount: 35 },
-        { id: "PrimalItemResource_Sparkpowder_C", amount: 20 },
-        { id: "PrimalItemResource_Crystal_C", amount: 25 },
-        { id: "PrimalItemResource_Oil_C", amount: 10 },
-        { id: "PrimalItemResource_Electronics_C", amount: 15 }
-      ]
-    }
-  };
+  let fields = example.map((e, index) => {
+    return `
+      <div class="resource-row">
+        <input placeholder="Resource ID" value="${e.id}">
+        <input type="number" value="${e.qty}">
+      </div>
+    `;
+  }).join("");
 
-  const item = example[name.toLowerCase()];
-  if (!item) {
-    document.getElementById("craftResults").innerHTML = `<p>❌ لم يتم العثور على العنصر المطلوب</p>`;
-    return;
-  }
-
-  const output = `ConfigOverrideItemCraftingCosts=(ItemClassString="${item.id}",BaseCraftingResourceRequirements=[\n${
-    item.cost.map(c => `(ResourceItemTypeString="${c.id}",BaseResourceRequirement=${c.amount})`).join(",\n")
-  }\n])`;
-
-  document.getElementById("craftResults").innerHTML = `
-    <h4>✅ كود التعديل:</h4>
-    <pre>${output}</pre>
-    <button onclick="navigator.clipboard.writeText(\`${output}\`)">📋 نسخ الكود</button>
+  fields += `
+    <button onclick="addResource()">➕ إضافة مورد</button>
+    <button onclick="generateCraftCode('${itemId}')">🎯 توليد الكود</button>
+    <pre id="finalCraftCode"></pre>
   `;
+
+  document.getElementById("craftResults").innerHTML = fields;
+}
+
+function addResource() {
+  const div = document.createElement("div");
+  div.className = "resource-row";
+  div.innerHTML = `<input placeholder="Resource ID"><input type="number" value="1">`;
+  document.getElementById("craftResults").insertBefore(div, document.querySelector("#craftResults button"));
+}
+
+function generateCraftCode(itemId) {
+  const inputs = document.querySelectorAll("#craftResults .resource-row");
+  let parts = [];
+  inputs.forEach(row => {
+    const id = row.children[0].value;
+    const qty = parseInt(row.children[1].value);
+    if (id && qty > 0) {
+      parts.push(`(ResourceItemTypeString="${id}",BaseResourceRequirement=${qty})`);
+    }
+  });
+  const finalCode = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemId}",BaseCraftingResourceRequirements=[${parts.join(",")}])`;
+  document.getElementById("finalCraftCode").textContent = finalCode;
 }
