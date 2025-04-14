@@ -1,117 +1,120 @@
 body {
-  font-family: Arial, sans-serif;
-  direction: rtl;
-  background-color: #f2f2f2;
+  font-family: 'Tahoma', sans-serif;
+  background: #101820;
+  color: #fff;
   margin: 0;
   padding: 0;
 }
 
-.top-banner {
-  background-color: #4e73df;
-  color: white;
+nav {
+  background: #1f2d3d;
   padding: 10px;
   text-align: center;
 }
 
-.social-links {
+nav ul {
   list-style: none;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.social-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-nav {
-  background-color: #343a40;
-}
-
-nav ul {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
   margin: 0;
-  list-style: none;
+}
+
+nav ul li {
+  display: inline-block;
+  margin: 0 10px;
 }
 
 nav ul li a {
-  color: white;
+  color: #00d1b2;
   text-decoration: none;
-  margin: 0 15px;
   font-weight: bold;
-}
-
-.container {
-  padding: 20px;
 }
 
 .section {
   display: none;
+  padding: 20px;
 }
 
 .section.active {
   display: block;
 }
 
-input[type="number"],
-input[type="text"],
-textarea {
+input, textarea {
   width: 100%;
-  padding: 8px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
 }
 
 button {
-  padding: 10px 15px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  background-color: #4e73df;
-  color: white;
+  padding: 10px;
+  margin-right: 5px;
+  background: #00d1b2;
+  color: #fff;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #2e59d9;
+pre {
+  background: #1e2b3a;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
 }
 
-pre {
-  background-color: #fff;
+.top-banner {
+  background: #00d1b2;
   padding: 15px;
-  border: 1px solid #ccc;
-  overflow-x: auto;
-  white-space: pre-wrap;
+  text-align: center;
+}
+
+.social-links {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-links li a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.support-text {
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .phantom-link {
   display: inline-block;
   margin-top: 10px;
-  color: #2e59d9;
-  text-decoration: none;
-}
-
-.phantom-link:hover {
+  color: #00d1b2;
   text-decoration: underline;
+  font-weight: bold;
 }
 
-/* زر الستاتس */
-.stats-link {
+.stats-button {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background-color: #4e73df;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
+  bottom: 20px;
+  right: 20px;
+  background: #ff9800;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  z-index: 1000;
+  z-index: 999;
+}
+
+.resource-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.resource-row input {
+  flex: 1;
 }
