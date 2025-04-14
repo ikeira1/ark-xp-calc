@@ -3,66 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ARK Tools - أدوات ARK</title>
+  <title>ARK Tools</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="top-banner">
-    <h2>💎 دعمك يساعدنا نقدم أفضل الأدوات!</h2>
-    <ul class="social-links">
-      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">📺 يوتيوب</a></li>
-      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 ديسكورد</a></li>
-      <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دكان تيب</a></li>
-    </ul>
-  </div>
+  <header>
+    <h1>🦖 أدوات ARK الشاملة</h1>
+    <div class="accounts">
+      <p>🎁 دعمك يساعد على تطوير الأدوات! 🌟</p>
+      <a href="https://www.dcaan.com/u/YourUser" target="_blank">متجر دكان</a>
+      <a href="https://tipme.com/YourUser" target="_blank">ادعمني عبر Tip</a>
+    </div>
+    <nav>
+      <button onclick="showSection('levels')">توليد اللفلات</button>
+      <button onclick="showSection('xp')">حساب XP</button>
+      <button onclick="showSection('engrams')">Engrams</button>
+      <button onclick="showSection('craft')">تعديل الكرافت</button>
+    </nav>
+  </header>
 
-  <nav>
-    <ul>
-      <li><a href="#" data-section="levels">🔧 توليد اللفلات</a></li>
-      <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
-      <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
-      <li><a href="#" data-section="crafting">🔍 تعديل وصفات الكرافت</a></li>
-    </ul>
-  </nav>
-
-  <div class="container">
-    <div id="levels" class="section active">
-      <h3>🔧 توليد اللفلات</h3>
-      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
+  <main>
+    <!-- توليد اللفلات -->
+    <section id="levels" class="section">
+      <h2>🎯 توليد اللفلات</h2>
+      <label>أقصى لفل:</label>
+      <input type="number" id="maxLevel" value="100" min="1"/>
       <button onclick="generateLevels()">توليد الكود</button>
-      <button onclick="copyResult('levelResult')">نسخ</button>
-      <pre id="levelResult"></pre>
-    </div>
+      <textarea id="levelOutput" readonly></textarea>
+    </section>
 
-    <div id="xpcalc" class="section">
-      <h3>📊 حساب XP</h3>
-      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
-      <button onclick="calculateXP()">احسب</button>
-      <button onclick="copyResult('xpResult')">نسخ</button>
-      <pre id="xpResult"></pre>
-    </div>
+    <!-- حساب XP -->
+    <section id="xp" class="section" style="display:none;">
+      <h2>📊 حساب XP</h2>
+      <textarea id="xpInput" placeholder="ضع كود اللفلات هنا..."></textarea>
+      <button onclick="calculateXP()">احسب المجموع</button>
+      <div class="xp-result">
+        <p id="totalXP"></p>
+        <textarea id="xpFinalCodes" readonly></textarea>
+      </div>
+    </section>
 
-    <div id="engrams" class="section">
-      <h3>📘 توليد Engrams حسب اللفل</h3>
-      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
-      <button onclick="generateEngrams()">توليد Engrams</button>
-      <button onclick="copyResult('engramsResult')">نسخ</button>
-      <pre id="engramsResult"></pre>
-    </div>
+    <!-- Engrams -->
+    <section id="engrams" class="section" style="display:none;">
+      <h2>🧠 توليد Engram Points</h2>
+      <label>عدد النقاط:</label>
+      <input type="number" id="engramPoints" value="1000" min="1"/>
+      <button onclick="generateEngramCode()">توليد الكود</button>
+      <textarea id="engramOutput" readonly></textarea>
+    </section>
 
-    <div id="crafting" class="section">
-      <h3>🔍 تعديل وصفات الصناعة</h3>
-      <input type="text" id="itemIdInput" placeholder="اكتب ID العنصر المراد تعديله" />
-      <div id="resourcesContainer"></div>
+    <!-- الكرافت -->
+    <section id="craft" class="section" style="display:none;">
+      <h2>⚒️ تعديل الكرافت</h2>
+      <label>ID العنصر:</label>
+      <input type="text" id="itemID" placeholder="مثال: Fabricator"/>
       <button onclick="addResource()">➕ إضافة مورد</button>
-      <button onclick="generateCraftingCode()">🎯 توليد الكود</button>
-      <button onclick="copyResult('craftResult')">📋 نسخ</button>
-      <pre id="craftResult"></pre>
-      <a class="external-link" href="https://ark.fandom.com/wiki/Item_IDs" target="_blank">🌐 اذهب إلى موقع Ark Phantom لنسخ ID العناصر</a>
-    </div>
-  </div>
+      <div id="resourcesContainer"></div>
+      <button onclick="generateCraftCode()">🎯 توليد الكود</button>
+      <textarea id="craftOutput" readonly></textarea>
+      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="phantom-link">🔍 موقع ARK Phantom لنسخ ID</a>
+    </section>
+  </main>
 
-  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank" class="floating-btn">⚙️ الستاتس</a>
+  <!-- زر الستاتس -->
+  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx"
+     target="_blank" class="stats-button">📈 الستاتس</a>
 
   <script src="script.js"></script>
 </body>
