@@ -1,70 +1,39 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ARK Tools - أدوات ARK</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>تعديل وصفات الصناعة - ARK</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="top-banner">
-    <div class="banner-content">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Ark_survival_evolved_logo.png/640px-Ark_survival_evolved_logo.png" alt="ARK Logo">
-      <div>
-        <h2>💡 دعمك يساعدنا في التطوير! 🚀</h2>
-        <p>تابعنا على حساباتنا وادعمنا على دكان تيب 👇</p>
-        <ul class="social-links">
-          <li><a href="https://www.youtube.com/@ikeira1" target="_blank">🎥 يوتيوب</a></li>
-          <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 ديسكورد</a></li>
-          <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دكان تيب</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    <header>
+        <div class="header-content">
+            <img src="ark-logo.png" alt="ARK Logo" class="logo">
+            <div class="support-section">
+                <p>🚀 ادعمك يساعدنا في التطوير 💡</p>
+                <p>تقدر تدعمنا من خلال:</p>
+                <div class="accounts">
+                    <a href="https://discord.gg/yourserver" target="_blank">🎮 ديسكورد</a>
+                    <a href="https://www.youtube.com/@yourchannel" target="_blank">📺 يوتيوب</a>
+                    <a href="https://tip.com/yourtip" target="_blank">💰 دكان تيب</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-  <nav>
-    <ul>
-      <li><a href="#" data-section="levels">🔧 توليد اللفلات</a></li>
-      <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
-      <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
-      <li><a href="#" data-section="crafting">🔍 تعديل وصفات الصناعة</a></li>
-    </ul>
-  </nav>
+    <main>
+        <section class="crafting-section">
+            <h2>🔍 البحث وتعديل وصفات الصناعة</h2>
+            <input id="searchInput" type="text" placeholder="ابحث عن عنصر (مثل: Fabricator)">
+            <button onclick="searchItem()">بحث</button>
+            <button onclick="window.open('https://ark.fandom.com/wiki/Item_IDs', '_blank')">🔗 موقع Ark Phantom لـ IDs</button>
+            <div id="resourcesContainer"></div>
+            <button onclick="addResource()">➕ إضافة مورد</button>
+            <button onclick="generateCode()">🎯 توليد الكود</button>
+            <pre id="outputCode"></pre>
+        </section>
+    </main>
 
-  <div class="container">
-    <div id="levels" class="section active">
-      <h3>🔧 توليد اللفلات</h3>
-      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
-      <button onclick="generateLevels()">توليد الكود</button>
-      <button onclick="copyResult('levelResult')">نسخ</button>
-      <pre id="levelResult"></pre>
-    </div>
-
-    <div id="xpcalc" class="section">
-      <h3>📊 حساب XP</h3>
-      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
-      <button onclick="calculateXP()">احسب</button>
-      <button onclick="copyResult('xpResult')">نسخ</button>
-      <pre id="xpResult"></pre>
-    </div>
-
-    <div id="engrams" class="section">
-      <h3>📘 توليد Engrams حسب اللفل</h3>
-      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
-      <button onclick="generateEngrams()">توليد Engrams</button>
-      <button onclick="copyResult('engramsResult')">نسخ</button>
-      <pre id="engramsResult"></pre>
-    </div>
-
-    <div id="crafting" class="section">
-      <h3>🔍 البحث وتعديل وصفات الصناعة</h3>
-      <input type="text" id="searchCraftInput" placeholder="ابحث عن عنصر (مثل Fabricator)" />
-      <button onclick="searchCraft()">بحث</button>
-      <button onclick="window.open('https://ark.fandom.com/wiki/Item_IDs', '_blank')">🔗 موقع Ark Phantom للـ IDs</button>
-      <div id="craftResults"></div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
