@@ -1,85 +1,74 @@
 document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", function () {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+    const target = this.getAttribute("data-section");
     document.querySelectorAll(".section").forEach(sec => sec.classList.remove("active"));
-    const section = this.getAttribute("data-section");
-    document.getElementById(section).classList.add("active");
+    document.getElementById(target).classList.add("active");
   });
 });
 
-function copyResult(id) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text);
-}
-
 function generateLevels() {
   const count = parseInt(document.getElementById("levelCount").value);
-  const base = 5;
-  let xp = base, result = "LevelExperienceRampOverrides=(";
-  for (let i = 0; i <= count; i++) {
-    result += `ExperiencePointsForLevel[${i}]=${xp}` + (i < count ? "," : "");
-    xp += Math.floor(base + i * 1.1);
+  if (!count || count <= 0) return;
+
+  let result = "LevelExperienceRampOverrides=(";
+  let total = 5;
+  result += `ExperiencePointsForLevel[0]=${total}`;
+  for (let i = 1; i <= count; i++) {
+    total += 5 + Math.floor(i * 1.1);
+    result += `,ExperiencePointsForLevel[${i}]=${total}`;
   }
   result += ")";
-  document.getElementById("levelResult").innerText = result;
+  document.getElementById("levelResult").textContent = result;
 }
 
 function calculateXP() {
   const input = document.getElementById("xpInput").value;
-  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=\d+/g);
-  let total = 0;
+  const matches = input.match(/ExperiencePointsForLevel\[\d+\]=(\d+)/g);
+  let xp = 0;
+  let result = "";
   if (matches) {
-    matches.forEach(m => {
-      const val = parseInt(m.split("=")[1]);
-      total += val;
+    matches.forEach(line => {
+      const num = parseInt(line.split("=")[1]);
+      xp += num;
     });
+    result = `OverrideMaxExperiencePointsPlayer=${xp * 2}\nOverrideMaxExperiencePointsPlayer=${xp}\nOverrideMaxExperiencePointsDino=2147483647`;
+  } else {
+    result = "لم يتم العثور على كود صالح.";
   }
-  const result = `OverrideMaxExperiencePointsPlayer=70368744177664\nOverrideMaxExperiencePointsPlayer=${total}\nOverrideMaxExperiencePointsDino=2147483647`;
-  document.getElementById("xpResult").innerText = result;
+  document.getElementById("xpResult").textContent = result;
 }
 
 function generateEngrams() {
-  const lvl = parseInt(document.getElementById("engramsLevel").value);
-  const arr = [];
-  for (let i = 0; i <= lvl; i++) {
-    const pts = i < 10 ? 0 : i < 20 ? 8 : i < 30 ? 14 : i < 40 ? 18 : i < 50 ? 24 : 28;
-    arr.push(`OverridePlayerLevelEngramPoints=${pts}`);
-  }
-  document.getElementById("engramsResult").innerText = arr.join("\n");
-}
-
-function generateStats() {
-  const sections = ["Player", "DinoTamed", "DinoWild"];
+  const level = parseInt(document.getElementById("engramsLevel").value);
+  if (!level || level <= 0) return;
+  const template = [0,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,18,18,18,18,18,18,18,18,18,18,24,24,24,24,24,24,24,24,24,24,28,28,28,28,28,28,28,28,28,28,36,36,36,36,36,36,36,36,36,36,50,50,50,50,50,50,50,50,50,50,50,50,50,70,70,70,70,70,70,70,70,80,80,80,80,80,80,100,100,100,100,100,110,110,110,110,110,125,125,135,135,135,120,120,220,220,220,220,220,220,220,220,220,220,220,220,220,260,260];
   let result = "";
-  sections.forEach(type => {
-    for (let i = 0; i < 12; i++) {
-      const val = document.getElementById(`${type}_${i}`).value || "1.0";
-      result += `PerLevelStatsMultiplier_${type}[${i}]=${val}\n`;
-    }
-  });
-  document.getElementById("statsResult").innerText = result;
+  for (let i = 0; i < level; i++) {
+    const value = template[i] !== undefined ? template[i] : 0;
+    result += `OverridePlayerLevelEngramPoints=${value}\n`;
+  }
+  document.getElementById("engramsResult").textContent = result;
 }
 
-window.onload = () => {
-  const statsContainer = document.getElementById("statsContainer");
-  const stats = [
-    "الصحة (Health)", "الطاقة (Stamina)", "الأكسجين (Oxygen)", "الطعام (Food)",
-    "الماء (Water)", "الوزن (Weight)", "الضرر الجسدي (Melee Damage)", "السرعة (Movement Speed)",
-    "القدرة على التحمل (Fortitude)", "الحرفية (Crafting Skill)", "السرعة البديلة (Alt Speed)", "الترويض (Torpidity)"
-  ];
-  ["Player", "DinoTamed", "DinoWild"].forEach(type => {
-    const title = type === "Player" ? "اللاعب" : type === "DinoTamed" ? "الحيوانات المروضة" : "الحيوانات البرية";
-    const box = document.createElement("div");
-    box.innerHTML = `<h4>${title}</h4>`;
-    stats.forEach((stat, i) => {
-      const input = document.createElement("input");
-      input.type = "number";
-      input.step = "0.01";
-      input.id = `${type}_${i}`;
-      input.placeholder = stat;
-      input.style.margin = "4px";
-      input.style.width = "120px";
-      box.appendChild(input);
-    });
-    statsContainer.appendChild(box);
-  });
-};
+function copyResult(id) {
+  const content = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(content);
+}
+
+function searchCraft() {
+  const input = document.getElementById("searchCraftInput").value.trim().toLowerCase();
+  const resultsDiv = document.getElementById("craftResults");
+  resultsDiv.innerHTML = "";
+
+  if (!input) return;
+
+  // مثال يدوي فقط
+  if (input.includes("fabricator")) {
+    const craftBox = document.createElement("pre");
+    craftBox.textContent = `ConfigOverrideItemCraftingCosts=(ItemClassString="PrimalItemStructure_Fabricator_C",BaseCraftingResourceRequirements=((ResourceItemTypeString="PrimalItemResource_MetalIngot_C",BaseResourceRequirement=35.0,bCraftingRequireExactResourceType=false),(ResourceItemTypeString="PrimalItemResource_Sparkpowder_C",BaseResourceRequirement=20.0,bCraftingRequireExactResourceType=false),(ResourceItemTypeString="PrimalItemResource_Crystal_C",BaseResourceRequirement=25.0,bCraftingRequireExactResourceType=false),(ResourceItemTypeString="PrimalItemResource_Oil_C",BaseResourceRequirement=10.0,bCraftingRequireExactResourceType=false),(ResourceItemTypeString="PrimalItemResource_Electronics_C",BaseResourceRequirement=15.0,bCraftingRequireExactResourceType=false)))`;
+    resultsDiv.appendChild(craftBox);
+  } else {
+    resultsDiv.textContent = "لم يتم العثور على نتائج.";
+  }
+}
