@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ARK Tools - أدوات ARK</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="top-banner">
+    <h2>روابط الدعم</h2>
+    <ul class="social-links">
+      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">يوتيوب</a></li>
+      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">الديسكورد</a></li>
+      <li><a href="https://tip.dokan.sa/keira" target="_blank">دكان تيب</a></li>
+    </ul>
+  </div>
+
+  <nav>
+    <ul>
+      <li><a href="#" data-section="levels">🔧 توليد اللفلات</a></li>
+      <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
+      <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
+      <li><a href="#" data-section="crafting">🔍 تعديل وصفات الكرافت</a></li>
+      <li><a href="#" data-section="stats">📊 تعديل الستاتس</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div id="levels" class="section active">
+      <h3>🔧 توليد اللفلات</h3>
+      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
+      <button onclick="generateLevels()">توليد الكود</button>
+      <button onclick="copyResult('levelResult')">نسخ</button>
+      <pre id="levelResult"></pre>
+    </div>
+
+    <div id="xpcalc" class="section">
+      <h3>📊 حساب XP</h3>
+      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
+      <button onclick="calculateXP()">احسب</button>
+      <button onclick="copyResult('xpResult')">نسخ</button>
+      <pre id="xpResult"></pre>
+    </div>
+
+    <div id="engrams" class="section">
+      <h3>📘 توليد Engrams حسب اللفل</h3>
+      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
+      <button onclick="generateEngrams()">توليد Engrams</button>
+      <button onclick="copyResult('engramsResult')">نسخ</button>
+      <pre id="engramsResult"></pre>
+    </div>
+
+    <div id="crafting" class="section">
+      <h3>🔍 البحث وتعديل وصفات الصناعة</h3>
+      <input type="text" id="searchCraftInput" placeholder="ابحث عن عنصر (مثل Fabricator)" />
+      <button onclick="searchCraft()">بحث</button>
+      <div id="craftResults"></div>
+    </div>
+
+    <div id="stats" class="section">
+      <h3>📊 تعديل الستاتس</h3>
+      <div id="statsContainer"></div>
+      <button onclick="generateStats()">توليد الكود</button>
+      <button onclick="copyResult('statsResult')">نسخ</button>
+      <pre id="statsResult"></pre>
+    </div>
+  </div>
+
+  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx"
+     target="_blank" class="stats-link">🔧 أداة الستاتس</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
