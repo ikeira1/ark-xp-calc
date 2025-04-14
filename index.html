@@ -4,123 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ARK Tools - أدوات ARK</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #111;
-      color: #fff;
-      padding: 20px;
-      direction: rtl;
-    }
-    .top-banner {
-      background-color: #222;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .social-links li {
-      list-style: none;
-      margin: 5px 0;
-    }
-    nav {
-      background-color: #1c1c1c;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-    nav ul {
-      display: flex;
-      gap: 15px;
-      list-style: none;
-      justify-content: center;
-      padding: 0;
-    }
-    nav ul li a {
-      color: #0a84ff;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background-color: #222;
-      padding: 20px;
-      border-radius: 12px;
-    }
-    textarea, input[type=number], input[type=text] {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-    }
-    input[list] {
-      background-color: #333;
-    }
-    button {
-      background-color: #0a84ff;
-      color: #fff;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 5px;
-    }
-    .results {
-      margin-top: 20px;
-      background-color: #333;
-      padding: 10px;
-      border-radius: 8px;
-    }
-    code {
-      background-color: #000;
-      padding: 5px;
-      border-radius: 5px;
-      display: block;
-    }
-    .copy-button {
-      background-color: #28a745;
-    }
-    .section {
-      margin-bottom: 40px;
-      display: none;
-    }
-    .editable {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin: 5px 0;
-    }
-    .editable input[type=number], .editable input[list] {
-      width: auto;
-    }
-    .editable button {
-      background-color: red;
-      width: auto;
-      padding: 5px 10px;
-    }
-    .craft-img {
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      margin-bottom: 10px;
-    }
-    .craft-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    datalist option {
-      background: #222;
-      color: #fff;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="top-banner">
@@ -134,90 +18,48 @@
 
   <nav>
     <ul>
-      <li><a href="#levels">توليد اللفلات</a></li>
-      <li><a href="#xpcalc">حساب XP</a></li>
-      <li><a href="#engrams">توليد Engrams</a></li>
-      <li><a href="#crafting">البحث عن الكرافت</a></li>
+      <li><a href="#" data-section="levels">🔧 توليد اللفلات</a></li>
+      <li><a href="#" data-section="xpcalc">📊 حساب XP</a></li>
+      <li><a href="#" data-section="engrams">📘 توليد Engrams</a></li>
+      <li><a href="#" data-section="crafting">🔍 البحث عن الكرافت</a></li>
     </ul>
   </nav>
 
   <div class="container">
-    <div id="levels" class="section" style="display: block;">
+    <div id="levels" class="section active">
       <h3>🔧 توليد اللفلات</h3>
-      <textarea placeholder="أدخل عدد اللفلات المطلوب..."></textarea>
-      <button>توليد الكود</button>
-      <button class="copy-button">نسخ</button>
+      <input id="levelCount" type="number" placeholder="أدخل عدد اللفلات..." />
+      <button onclick="generateLevels()">توليد الكود</button>
+      <button onclick="copyResult('levelResult')">نسخ</button>
+      <pre id="levelResult"></pre>
     </div>
 
     <div id="xpcalc" class="section">
       <h3>📊 حساب XP</h3>
-      <textarea placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
-      <button>احسب</button>
-      <button class="copy-button">نسخ</button>
+      <textarea id="xpInput" placeholder="ألصق كود LevelExperienceRampOverrides هنا..."></textarea>
+      <button onclick="calculateXP()">احسب</button>
+      <button onclick="copyResult('xpResult')">نسخ</button>
+      <pre id="xpResult"></pre>
     </div>
 
     <div id="engrams" class="section">
       <h3>📘 توليد Engrams حسب اللفل</h3>
-      <input type="number" placeholder="عدد اللفلات">
-      <button>توليد Engrams</button>
-      <button class="copy-button">نسخ</button>
+      <input id="engramsLevel" type="number" placeholder="كم لفل تبي؟" />
+      <button onclick="generateEngrams()">توليد Engrams</button>
+      <button onclick="copyResult('engramsResult')">نسخ</button>
+      <pre id="engramsResult"></pre>
     </div>
 
     <div id="crafting" class="section">
       <h3>🔍 البحث عن عناصر قابلة للصناعة</h3>
-      <input type="text" placeholder="ابحث باسم العنصر...">
-      <button>بحث</button>
-      <div class="craft-results"></div>
+      <input type="text" id="searchCraftInput" placeholder="ابحث باسم العنصر..." />
+      <button onclick="searchCraft()">بحث</button>
+      <div id="craftResults"></div>
     </div>
   </div>
 
-  <datalist id="resourceList">
-    <option value="PrimalItemResource_Wood_C">
-    <option value="PrimalItemResource_Thatch_C">
-    <option value="PrimalItemResource_Stone_C">
-    <option value="PrimalItemResource_Flint_C">
-    <option value="PrimalItemResource_MetalIngot_C">
-    <option value="PrimalItemResource_CementingPaste_C">
-    <option value="PrimalItemResource_Crystal_C">
-    <option value="PrimalItemResource_Oil_C">
-    <option value="PrimalItemResource_Sparkpowder_C">
-    <option value="PrimalItemResource_Electronics_C">
-    <option value="PrimalItemResource_Polymer_C">
-  </datalist>
+  <datalist id="resourceList"></datalist>
 
-  <script>
-    const craftingData = {
-      fabricator: {
-        image: 'https://ark.wiki.gg/images/1/1a/Fabricator.png',
-        resources: [
-          { item: "PrimalItemResource_MetalIngot_C", amount: 35 },
-          { item: "PrimalItemResource_CementingPaste_C", amount: 20 },
-          { item: "PrimalItemResource_Crystal_C", amount: 15 },
-          { item: "PrimalItemResource_Oil_C", amount: 10 },
-          { item: "PrimalItemResource_Sparkpowder_C", amount: 50 }
-        ]
-      },
-      chembench: {
-        image: 'https://ark.wiki.gg/images/c/cd/Chemistry_Bench.png',
-        resources: [
-          { item: "PrimalItemResource_Electronics_C", amount: 20 },
-          { item: "PrimalItemResource_Crystal_C", amount: 250 },
-          { item: "PrimalItemResource_CementingPaste_C", amount: 250 },
-          { item: "PrimalItemResource_Polymer_C", amount: 250 },
-          { item: "PrimalItemResource_MetalIngot_C", amount: 250 }
-        ]
-      }
-    };
-
-    const searchInput = document.querySelector('input[type="text"]');
-    const searchButton = document.querySelector('button');
-    if (searchInput && searchButton) {
-      searchInput.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-          searchButton.click();
-        }
-      });
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
