@@ -8,13 +8,12 @@
 </head>
 <body>
   <div class="top-banner">
-    <h2>🎁 شكراً لدعمك</h2>
+    <h2>💎 دعمك يساعدنا نقدم أفضل الأدوات!</h2>
     <ul class="social-links">
-      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">📺 قناتي على يوتيوب</a></li>
-      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 سيرفر الديسكورد</a></li>
-      <li><a href="https://tip.dokan.sa/keira" target="_blank">💸 دعم عبر دكان</a></li>
+      <li><a href="https://www.youtube.com/@ikeira1" target="_blank">📺 يوتيوب</a></li>
+      <li><a href="https://discord.gg/2rMzBv6zRv" target="_blank">💬 ديسكورد</a></li>
+      <li><a href="https://tip.dokan.sa/keira" target="_blank">💰 دكان تيب</a></li>
     </ul>
-    <p class="support-text">وجودك يدعمني، ودعمك يطور المحتوى! ❤️</p>
   </div>
 
   <nav>
@@ -53,21 +52,17 @@
 
     <div id="crafting" class="section">
       <h3>🔍 تعديل وصفات الصناعة</h3>
-      <p>
-        أدخل ID العنصر مثل: <code>PrimalItemStructure_Fabricator_C</code>
-      </p>
-      <input type="text" id="craftItemId" placeholder="Item ID" />
+      <input type="text" id="itemIdInput" placeholder="اكتب ID العنصر المراد تعديله" />
       <div id="resourcesContainer"></div>
       <button onclick="addResource()">➕ إضافة مورد</button>
-      <button onclick="generateCraftingCode()">🔧 توليد الكود</button>
-      <button onclick="copyResult('craftingResult')">📋 نسخ</button>
-      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="phantom-link">🔗 موقع ARK Phantom</a>
-      <pre id="craftingResult"></pre>
+      <button onclick="generateCraftingCode()">🎯 توليد الكود</button>
+      <button onclick="copyResult('craftResult')">📋 نسخ</button>
+      <pre id="craftResult"></pre>
+      <a class="external-link" href="https://ark.fandom.com/wiki/Item_IDs" target="_blank">🌐 اذهب إلى موقع Ark Phantom لنسخ ID العناصر</a>
     </div>
   </div>
 
-  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx"
-     target="_blank" class="stats-button">⚙️ أداة الستاتس</a>
+  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank" class="floating-btn">⚙️ الستاتس</a>
 
   <script src="script.js"></script>
 </body>
