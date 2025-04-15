@@ -1,43 +1,494 @@
-
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>موقع أدوات ARK</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أدوات ARK | Keira</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6e48aa;
+            --secondary: #9d50bb;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --accent: #e53e3e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* شريط الحسابات العلوي */
+        .account-bar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .account-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .account-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .account-item a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .account-item .icon {
+            font-size: 20px;
+        }
+        
+        .donate-btn {
+            background: var(--accent);
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .donate-btn:hover {
+            background: #c53030;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* العبارات التحفيزية */
+        .motivation {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-right: 5px solid var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .motivation .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        /* تبويبات الأدوات */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background: #edf2f7;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* أدوات المحتوى */
+        .tool-container {
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+        
+        .tool {
+            display: none;
+        }
+        
+        .tool.active {
+            display: block;
+        }
+        
+        /* تنسيقات أداة الكرافت */
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .resource {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            align-items: center;
+        }
+        
+        .resource input[type="text"] {
+            flex: 3;
+        }
+        
+        .resource input[type="number"] {
+            flex: 1;
+        }
+        
+        .remove-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .action-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .generate-btn {
+            background: #2196F3;
+        }
+        
+        .output-container {
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #607d8b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* الزر العائم */
+        #statsToolBtn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        #statsToolBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .account-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            #statsToolBtn {
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 15px;
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+            
+            .resource {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>🎮 أدوات ARK الشاملة</h1>
-    <div class="accounts">
-      <p>✨ إذا استفدت من أدوات الموقع، لا تنسَ دعمنا للاستمرار في التطوير 💚</p>
-      <div class="social-links">
-        <a href="https://discord.gg/yourserver" target="_blank">🎧 ديسكورد</a>
-        <a href="https://www.youtube.com/@yourchannel" target="_blank">📺 يوتيوب</a>
-        <a href="https://tipdokan.com/yourprofile" target="_blank">💸 دعم دكان تيب</a>
-      </div>
+    <!-- شريط الحسابات العلوي -->
+    <div class="account-bar">
+        <div class="account-container">
+            <div class="account-item">
+                <a href="https://www.youtube.com/@ikeira1/featured" target="_blank">
+                    <span class="icon">🎥</span>
+                    <span>قناة اليوتيوب</span>
+                </a>
+            </div>
+            
+            <div class="account-item">
+                <a href="https://discord.gg/2rMzBv6zRv" target="_blank">
+                    <span class="icon">💬</span>
+                    <span>سيرفر الديسكورد</span>
+                </a>
+            </div>
+            
+            <div class="account-item">
+                <a href="https://tip.dokan.sa/keira" target="_blank" class="donate-btn">
+                    <span class="icon">❤️</span>
+                    <span>دعم المطور</span>
+                </a>
+            </div>
+        </div>
     </div>
-  </header>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">أدوات ARK للمحترفين</h1>
+        
+        <div class="motivation">
+            "مرحبًا بك في <span class="highlight">أدوات Keira</span>! هنا ستجد كل ما تحتاجه لتخصيص لعبة ARK تمامًا كما تحب. ❤️"
+        </div>
+        
+        <!-- تبويبات الأدوات -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTool('tool1')">توليد اللفلات</div>
+            <div class="tab" onclick="showTool('tool2')">حساب الـ XP</div>
+            <div class="tab" onclick="showTool('tool3')">مولد الإنقرامز</div>
+            <div class="tab" onclick="showTool('tool4')">معدّل الكرافت</div>
+        </div>
+        
+        <!-- أدوات المحتوى -->
+        <div class="tool-container">
+            <!-- الأداة 1: توليد اللفلات -->
+            <div id="tool1" class="tool active">
+                <h2>توليد كود تجربة اللفلات</h2>
+                <div class="input-group">
+                    <label for="maxLevel">الحد الأقصى لللفل:</label>
+                    <input type="number" id="maxLevel" value="100" min="1">
+                </div>
+                
+                <button class="action-btn" onclick="generateLevels()">توليد الكود</button>
+                <button class="copy-btn" onclick="copyCode('levelCode')">نسخ</button>
+                
+                <div class="output-container">
+                    <textarea id="levelCode" readonly></textarea>
+                </div>
+            </div>
+            
+            <!-- الأداة 2: حساب الـ XP الكلي -->
+            <div id="tool2" class="tool">
+                <h2>حساب مجموع نقاط التجربة</h2>
+                <p>الصفحة قيد التطوير...</p>
+            </div>
+            
+            <!-- الأداة 3: مولد الإنقرامز -->
+            <div id="tool3" class="tool">
+                <h2>مولد نقاط الإنقرامز</h2>
+                <p>الصفحة قيد التطوير...</p>
+            </div>
+            
+            <!-- الأداة 4: معدّل الكرافت -->
+            <div id="tool4" class="tool">
+                <h2>معدّل كلفة الكرافت</h2>
+                
+                <div class="input-group">
+                    <label for="itemClass">ID العنصر المراد تعديله:</label>
+                    <input type="text" id="itemClass" placeholder="مثال: SoulTerminal_DS_C">
+                </div>
+                
+                <h3>الموارد المطلوبة:</h3>
+                <div id="resourcesContainer">
+                    <div class="resource">
+                        <input type="text" class="resourceId" placeholder="مثال: PrimalItemResource_MetalIngot_C">
+                        <input type="number" class="resourceQty" placeholder="الكمية" min="0" step="0.1" value="1">
+                        <button class="remove-btn" onclick="removeResource(this)">🗑️</button>
+                    </div>
+                </div>
+                
+                <button class="action-btn" onclick="addResource()">➕ إضافة مورد</button>
+                <button class="action-btn generate-btn" onclick="generateCraftCode()">⚡ توليد الكود</button>
+                
+                <div class="output-container">
+                    <textarea id="craftOutput" readonly></textarea>
+                    <button class="copy-btn" onclick="copyCraftCode()">📋 نسخ الكود</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="motivation">
+            "شارك الأدوات مع أصدقائك! دعمك الصغير يساعدنا على تطوير المزيد من الأدوات المفيدة. 🚀"
+        </div>
+    </div>
+    
+    <!-- زر أداة الستاتس العائم -->
+    <button id="statsToolBtn" onclick="window.open('http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx', '_blank')">
+        📊 أداة الستاتس
+    </button>
+    
+    <script>
+        // تبديل بين الأدوات
+        function showTool(toolId) {
+            document.querySelectorAll('.tool').forEach(tool => {
+                tool.classList.remove('active');
+            });
+            document.getElementById(toolId).classList.add('active');
+            
+            // تحديث التبويبات النشطة
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        
+        // ========== الأداة 1: توليد اللفلات ==========
+        function generateLevels() {
+            const maxLevel = parseInt(document.getElementById("maxLevel").value);
+            if (isNaN(maxLevel) {
+                alert("الرجاء إدخال رقم صحيح");
+                return;
+            }
+            
+            let code = "LevelExperienceRampOverrides=(";
+            
+            for (let i = 0; i <= maxLevel; i++) {
+                const xp = Math.floor(5 + (i * i * 1.5));
+                code += `ExperiencePointsForLevel[${i}]=${xp}`;
+                if (i < maxLevel) code += ",";
+            }
+            
+            code += ")";
+            document.getElementById("levelCode").value = code;
+        }
+        
+        // ========== الأداة 4: معدّل الكرافت ==========
+        // إضافة مورد جديد
+        function addResource() {
+            const container = document.getElementById("resourcesContainer");
+            const newResource = document.createElement("div");
+            newResource.className = "resource";
+            newResource.innerHTML = `
+                <input type="text" class="resourceId" placeholder="مثال: PrimalItemResource_MetalIngot_C">
+                <input type="number" class="resourceQty" placeholder="الكمية" min="0" step="0.1" value="1">
+                <button class="remove-btn" onclick="removeResource(this)">🗑️</button>
+            `;
+            container.appendChild(newResource);
+        }
 
-  <main>
-    <nav class="tool-nav">
-      <button onclick="showTool('levelTool')">🎚️ توليد اللفلات</button>
-      <button onclick="showTool('xpTool')">📈 حساب XP</button>
-      <button onclick="showTool('engramTool')">📘 توليد Engrams</button>
-      <button onclick="showTool('craftTool')">⚒️ تعديل الكرافت</button>
-    </nav>
+        // حذف مورد
+        function removeResource(button) {
+            button.parentElement.remove();
+        }
 
-    <section id="levelTool" class="tool-section hidden">أداة توليد اللفلات هنا</section>
-    <section id="xpTool" class="tool-section hidden">أداة حساب XP هنا</section>
-    <section id="engramTool" class="tool-section hidden">أداة الإنقرامز هنا</section>
-    <section id="craftTool" class="tool-section hidden">أداة تعديل الكرافت هنا</section>
-  </main>
+        // توليد كود الكرافت
+        function generateCraftCode() {
+            const itemClass = document.getElementById("itemClass").value;
+            if (!itemClass) {
+                alert("يجب إدخال ID العنصر أولاً!");
+                return;
+            }
 
-  <a class="stats-link" href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" target="_blank">
-    🔗 أداة الستاتس الخارجية
-  </a>
+            const resources = [];
+            document.querySelectorAll(".resource").forEach(resource => {
+                const id = resource.querySelector(".resourceId").value;
+                const qty = resource.querySelector(".resourceQty").value;
+                
+                if (id && qty) {
+                    resources.push(
+                        `(ResourceItemTypeString="${id}",BaseResourceRequirement=${qty}.0,bCraftingRequireExactResourceType=false)`
+                    );
+                }
+            });
 
-  <script src="script.js"></script>
+            if (resources.length === 0) {
+                alert("يجب إضافة مورد واحد على الأقل!");
+                return;
+            }
+
+            const code = `ConfigOverrideItemCraftingCosts=(ItemClassString="${itemClass}",BaseCraftingResourceRequirements=(${resources.join(",")}))`;
+            document.getElementById("craftOutput").value = code;
+        }
+
+        // ========== دوال النسخ ==========
+        function copyCode(elementId) {
+            const code = document.getElementById(elementId);
+            code.select();
+            document.execCommand("copy");
+            alert("تم نسخ الكود!");
+        }
+        
+        function copyCraftCode() {
+            copyCode("craftOutput");
+        }
+    </script>
 </body>
 </html>
