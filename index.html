@@ -1,73 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ARK Tools</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <h1>أدوات ARK الاحترافية</h1>
-    <div class="support-buttons">
-      <a href="https://your-dokan-link.com" class="support-btn" target="_blank">🎁 دعم عبر دكان</a>
-      <a href="https://your-tip-link.com" class="support-btn" target="_blank">💰 دعم عبر تيب</a>
-    </div>
-  </header>
-
-  <nav>
-    <button onclick="showSection('levels')">توليد اللفلات</button>
-    <button onclick="showSection('xp')">حساب الـ XP</button>
-    <button onclick="showSection('engrams')">Engrams</button>
-    <button onclick="showSection('craft')">تعديل الكرافت</button>
-  </nav>
-
-  <main>
-    <!-- أقسام الأدوات -->
-    <section id="levels" class="tool-section">
-      <h2>توليد اللفلات</h2>
-      <label>أقصى لفل:</label>
-      <input type="number" id="maxLevel" value="100" min="1" max="1000" />
-      <button onclick="generateLevels()">توليد الكود</button>
-      <textarea id="levelOutput" rows="10" readonly></textarea>
-    </section>
-
-    <section id="xp" class="tool-section" style="display:none">
-      <h2>حساب الـ XP</h2>
-      <label>أقصى لفل:</label>
-      <input type="number" id="xpLevel" value="100" min="1" max="1000" />
-      <button onclick="generateXP()">حساب XP</button>
-      <textarea id="xpOutput" rows="10" readonly></textarea>
-    </section>
-
-    <section id="engrams" class="tool-section" style="display:none">
-      <h2>توليد Engrams</h2>
-      <label>عدد النقاط:</label>
-      <input type="number" id="engramPoints" value="9999" />
-      <button onclick="generateEngrams()">توليد الكود</button>
-      <textarea id="engramsOutput" rows="10" readonly></textarea>
-    </section>
-
-    <section id="craft" class="tool-section" style="display:none">
-      <h2>تعديل وصفة الكرافت</h2>
-      <label>Item ID:</label>
-      <input type="text" id="itemID" placeholder="مثال: PrimalItemResource_Metal_C" />
-      <div id="resources"></div>
-      <button onclick="addResource()">إضافة مورد</button>
-      <button onclick="generateCraftCode()">توليد الكود</button>
-      <textarea id="craftOutput" rows="8" readonly></textarea>
-      <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="external-link">🔗 موقع Ark Phantom</a>
-    </section>
-  </main>
-
-  <!-- زر الانتقال للستاتس -->
-  <a href="http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx" 
-     class="fixed-stats-button" target="_blank">⚙️ أداة الستاتس</a>
-
-  <footer>
-    <p>💚 تم تطوير الموقع لدعم مجتمع ARK العربي</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
