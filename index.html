@@ -12,6 +12,10 @@
             --dark: #2d3748;
             --light: #f7fafc;
             --accent: #e53e3e;
+            --success: #4CAF50;
+            --info: #2196F3;
+            --warning: #FF9800;
+            --danger: #F44336;
         }
         
         * {
@@ -25,6 +29,7 @@
             background: #f0f2f5;
             color: #333;
             line-height: 1.6;
+            padding-bottom: 80px;
         }
         
         /* شريط الحسابات العلوي */
@@ -149,7 +154,7 @@
             display: block;
         }
         
-        /* تنسيقات أداة الكرافت */
+        /* عناصر التحكم المشتركة */
         .input-group {
             margin: 15px 0;
         }
@@ -160,49 +165,54 @@
             font-weight: bold;
         }
         
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-family: 'Tajawal', sans-serif;
         }
         
-        .resource {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            align-items: center;
-        }
-        
-        .resource input[type="text"] {
-            flex: 3;
-        }
-        
-        .resource input[type="number"] {
-            flex: 1;
-        }
-        
-        .remove-btn {
-            background: #ff4444;
-            color: white;
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
-            padding: 5px 10px;
             cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
         }
         
-        .action-btn {
-            background: #4CAF50;
+        .btn-primary {
+            background: var(--primary);
             color: white;
-            border: none;
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 4px;
-            cursor: pointer;
         }
         
-        .generate-btn {
-            background: #2196F3;
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
         }
         
         .output-container {
@@ -217,6 +227,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: monospace;
+            resize: vertical;
         }
         
         .copy-btn {
@@ -229,6 +240,42 @@
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
+        }
+        
+        /* تنسيقات خاصة بالأدوات */
+        /* أداة الكرافت */
+        .resource {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .resource input[type="text"] {
+            flex: 3;
+        }
+        
+        .resource input[type="number"] {
+            flex: 1;
+        }
+        
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        /* أداة الإنقرامز */
+        .engram-pattern {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
         }
         
         /* الزر العائم */
@@ -269,6 +316,10 @@
                 flex-direction: column;
             }
             
+            .tab {
+                padding: 10px;
+            }
+            
             #statsToolBtn {
                 left: 50%;
                 transform: translateX(-50%);
@@ -277,7 +328,7 @@
                 padding: 10px 20px;
             }
             
-            .resource {
+            .resource, .engram-pattern {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -332,34 +383,87 @@
             <!-- الأداة 1: توليد اللفلات -->
             <div id="tool1" class="tool active">
                 <h2>توليد كود تجربة اللفلات</h2>
+                <p>قم بتوليد كود LevelExperienceRampOverrides لمستويات مخصصة</p>
+                
                 <div class="input-group">
                     <label for="maxLevel">الحد الأقصى لللفل:</label>
                     <input type="number" id="maxLevel" value="100" min="1">
                 </div>
                 
-                <button class="action-btn" onclick="generateLevels()">توليد الكود</button>
-                <button class="copy-btn" onclick="copyCode('levelCode')">نسخ</button>
+                <div class="input-group">
+                    <label for="baseXP">نقاط التجربة الأساسية:</label>
+                    <input type="number" id="baseXP" value="5" min="1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="xpMultiplier">مضاعف التجربة:</label>
+                    <input type="number" id="xpMultiplier" value="1.5" step="0.1" min="0.1">
+                </div>
+                
+                <button class="btn btn-primary" onclick="generateLevels()">توليد الكود</button>
                 
                 <div class="output-container">
                     <textarea id="levelCode" readonly></textarea>
+                    <button class="copy-btn" onclick="copyCode('levelCode')">📋 نسخ الكود</button>
                 </div>
             </div>
             
             <!-- الأداة 2: حساب الـ XP الكلي -->
             <div id="tool2" class="tool">
                 <h2>حساب مجموع نقاط التجربة</h2>
-                <p>الصفحة قيد التطوير...</p>
+                <p>احسب إجمالي نقاط التجربة المطلوبة للوصول إلى مستوى معين</p>
+                
+                <div class="input-group">
+                    <label for="xpCode">أدخل كود LevelExperienceRampOverrides:</label>
+                    <textarea id="xpCode" placeholder="LevelExperienceRampOverrides=(ExperiencePointsForLevel[0]=5,...)"></textarea>
+                </div>
+                
+                <button class="btn btn-primary" onclick="calculateTotalXP()">حساب المجموع</button>
+                
+                <div class="output-container">
+                    <textarea id="totalXPOutput" readonly></textarea>
+                    <button class="copy-btn" onclick="copyCode('totalXPOutput')">📋 نسخ الكود</button>
+                </div>
             </div>
             
             <!-- الأداة 3: مولد الإنقرامز -->
             <div id="tool3" class="tool">
                 <h2>مولد نقاط الإنقرامز</h2>
-                <p>الصفحة قيد التطوير...</p>
+                <p>قم بتوليد كود OverridePlayerLevelEngramPoints لمستويات مخصصة</p>
+                
+                <div class="input-group">
+                    <label for="engramMaxLevel">الحد الأقصى لللفل:</label>
+                    <input type="number" id="engramMaxLevel" value="100" min="1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="engramPattern">نمط توزيع النقاط:</label>
+                    <select id="engramPattern">
+                        <option value="8,14">8 نقاط حتى 50 ثم 14</option>
+                        <option value="10,15">10 نقاط حتى 60 ثم 15</option>
+                        <option value="custom">مخصص</option>
+                    </select>
+                </div>
+                
+                <div id="customPatternContainer" style="display: none;">
+                    <div class="input-group">
+                        <label for="customPattern">أدخل النمط المخصص (مثال: 8,8,8,14):</label>
+                        <input type="text" id="customPattern" placeholder="8,8,8,14">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="generateEngrams()">توليد الكود</button>
+                
+                <div class="output-container">
+                    <textarea id="engramCode" readonly></textarea>
+                    <button class="copy-btn" onclick="copyCode('engramCode')">📋 نسخ الكود</button>
+                </div>
             </div>
             
             <!-- الأداة 4: معدّل الكرافت -->
             <div id="tool4" class="tool">
                 <h2>معدّل كلفة الكرافت</h2>
+                <p>خصص كلفة صنع أي عنصر في ARK</p>
                 
                 <div class="input-group">
                     <label for="itemClass">ID العنصر المراد تعديله:</label>
@@ -375,12 +479,12 @@
                     </div>
                 </div>
                 
-                <button class="action-btn" onclick="addResource()">➕ إضافة مورد</button>
-                <button class="action-btn generate-btn" onclick="generateCraftCode()">⚡ توليد الكود</button>
+                <button class="btn btn-info" onclick="addResource()">➕ إضافة مورد</button>
+                <button class="btn btn-primary" onclick="generateCraftCode()">⚡ توليد الكود</button>
                 
                 <div class="output-container">
                     <textarea id="craftOutput" readonly></textarea>
-                    <button class="copy-btn" onclick="copyCraftCode()">📋 نسخ الكود</button>
+                    <button class="copy-btn" onclick="copyCode('craftOutput')">📋 نسخ الكود</button>
                 </div>
             </div>
         </div>
@@ -413,21 +517,107 @@
         // ========== الأداة 1: توليد اللفلات ==========
         function generateLevels() {
             const maxLevel = parseInt(document.getElementById("maxLevel").value);
-            if (isNaN(maxLevel) {
-                alert("الرجاء إدخال رقم صحيح");
+            const baseXP = parseInt(document.getElementById("baseXP").value);
+            const xpMultiplier = parseFloat(document.getElementById("xpMultiplier").value);
+            
+            if (isNaN(maxLevel) || isNaN(baseXP) || isNaN(xpMultiplier)) {
+                alert("الرجاء إدخال قيم صحيحة");
                 return;
             }
             
             let code = "LevelExperienceRampOverrides=(";
             
             for (let i = 0; i <= maxLevel; i++) {
-                const xp = Math.floor(5 + (i * i * 1.5));
+                const xp = Math.floor(baseXP + (i * i * xpMultiplier));
                 code += `ExperiencePointsForLevel[${i}]=${xp}`;
                 if (i < maxLevel) code += ",";
             }
             
             code += ")";
             document.getElementById("levelCode").value = code;
+        }
+        
+        // ========== الأداة 2: حساب الـ XP الكلي ==========
+        function calculateTotalXP() {
+            const xpCode = document.getElementById("xpCode").value;
+            if (!xpCode) {
+                alert("الرجاء إدخال كود LevelExperienceRampOverrides");
+                return;
+            }
+            
+            try {
+                // استخراج قيم XP من الكود
+                const xpValues = xpCode.match(/ExperiencePointsForLevel\[\d+\]=\d+/g);
+                if (!xpValues || xpValues.length === 0) {
+                    throw new Error("تنسيق الكود غير صحيح");
+                }
+                
+                let totalXP = 0;
+                xpValues.forEach(xp => {
+                    const value = parseInt(xp.split("=")[1]);
+                    totalXP += value;
+                });
+                
+                const output = `// المجموع الكلي: ${totalXP}\n\n` +
+                               `OverrideMaxExperiencePointsPlayer=${totalXP}\n` +
+                               `OverrideMaxExperiencePointsPlayer=70368744177664\n` +
+                               `OverrideMaxExperiencePointsDino=2147483647`;
+                
+                document.getElementById("totalXPOutput").value = output;
+            } catch (error) {
+                alert("حدث خطأ في تحليل الكود: " + error.message);
+            }
+        }
+        
+        // ========== الأداة 3: مولد الإنقرامز ==========
+        document.getElementById("engramPattern").addEventListener("change", function() {
+            const customContainer = document.getElementById("customPatternContainer");
+            if (this.value === "custom") {
+                customContainer.style.display = "block";
+            } else {
+                customContainer.style.display = "none";
+            }
+        });
+        
+        function generateEngrams() {
+            const maxLevel = parseInt(document.getElementById("engramMaxLevel").value);
+            const pattern = document.getElementById("engramPattern").value;
+            let pointsPattern = [];
+            
+            if (pattern === "custom") {
+                const customPattern = document.getElementById("customPattern").value;
+                if (!customPattern) {
+                    alert("الرجاء إدخال النمط المخصص");
+                    return;
+                }
+                pointsPattern = customPattern.split(",").map(Number);
+            } else {
+                pointsPattern = pattern.split(",").map(Number);
+            }
+            
+            if (isNaN(maxLevel) || pointsPattern.some(isNaN)) {
+                alert("الرجاء إدخال قيم صحيحة");
+                return;
+            }
+            
+            let code = "";
+            let patternIndex = 0;
+            
+            for (let i = 0; i <= maxLevel; i++) {
+                // تطبيق النمط بشكل متكرر
+                if (patternIndex >= pointsPattern.length) {
+                    patternIndex = pointsPattern.length - 1;
+                }
+                
+                code += `OverridePlayerLevelEngramPoints=${pointsPattern[patternIndex]}\n`;
+                
+                // زيادة المؤشر للنمط بعد كل 5 مستويات (يمكن تعديله)
+                if (i > 0 && i % 5 === 0) {
+                    patternIndex++;
+                }
+            }
+            
+            document.getElementById("engramCode").value = code.trim();
         }
         
         // ========== الأداة 4: معدّل الكرافت ==========
@@ -486,9 +676,11 @@
             alert("تم نسخ الكود!");
         }
         
-        function copyCraftCode() {
-            copyCode("craftOutput");
-        }
+        // تهيئة الصفحة
+        document.addEventListener("DOMContentLoaded", function() {
+            // إضافة مورد افتراضي لأداة الكرافت
+            addResource();
+        });
     </script>
 </body>
 </html>
