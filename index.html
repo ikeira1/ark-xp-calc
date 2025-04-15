@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أدوات ARK | Keira</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #6e48aa;
@@ -16,6 +17,9 @@
             --info: #2196F3;
             --warning: #FF9800;
             --danger: #F44336;
+            --discord: #5865F2;
+            --youtube: #FF0000;
+            --donate: #FF6B6B;
         }
         
         * {
@@ -32,7 +36,7 @@
             padding-bottom: 80px;
         }
         
-        /* شريط الحسابات العلوي */
+        /* شريط الحسابات العلوي المطور */
         .account-bar {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -47,47 +51,89 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
         
-        .account-item {
+        .account-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: transform 0.3s;
+            gap: 12px;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .account-item:hover {
-            transform: translateY(-3px);
+        .account-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
         
-        .account-item a {
+        .account-card.youtube {
+            background: rgba(255,0,0,0.15);
+            border-color: rgba(255,0,0,0.3);
+        }
+        
+        .account-card.discord {
+            background: rgba(88,101,242,0.15);
+            border-color: rgba(88,101,242,0.3);
+        }
+        
+        .account-card.donate {
+            background: rgba(230,62,62,0.15);
+            border-color: rgba(230,62,62,0.3);
+        }
+        
+        .account-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .youtube .account-icon {
+            background: var(--youtube);
+        }
+        
+        .discord .account-icon {
+            background: var(--discord);
+        }
+        
+        .donate .account-icon {
+            background: var(--donate);
+        }
+        
+        .account-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .account-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .account-desc {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .account-card a {
             color: white;
             text-decoration: none;
-            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        
-        .account-item .icon {
-            font-size: 20px;
-        }
-        
-        .donate-btn {
-            background: var(--accent);
-            padding: 8px 15px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .donate-btn:hover {
-            background: #c53030;
+            gap: 12px;
+            width: 100%;
         }
         
         /* المحتوى الرئيسي */
@@ -101,26 +147,46 @@
         .motivation {
             background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 25px 0;
             border-right: 5px solid var(--primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             text-align: center;
             font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .motivation::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(110,72,170,0.05), rgba(157,80,187,0.05));
+            z-index: -1;
         }
         
         .motivation .highlight {
             color: var(--primary);
             font-weight: bold;
+            text-shadow: 0 2px 4px rgba(110,72,170,0.2);
+        }
+        
+        .motivation .emoji {
+            font-size: 24px;
+            vertical-align: middle;
+            margin: 0 5px;
         }
         
         /* تبويبات الأدوات */
         .tabs {
             display: flex;
             background: white;
-            border-radius: 10px 10px 0 0;
+            border-radius: 12px 12px 0 0;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .tab {
@@ -130,6 +196,8 @@
             transition: all 0.3s;
             text-align: center;
             flex: 1;
+            position: relative;
+            font-weight: bold;
         }
         
         .tab.active {
@@ -137,12 +205,33 @@
             color: white;
         }
         
+        .tab::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: all 0.3s;
+        }
+        
+        .tab:hover::after {
+            width: 80%;
+        }
+        
+        .tab.active::after {
+            width: 80%;
+            background: white;
+        }
+        
         /* أدوات المحتوى */
         .tool-container {
             background: white;
             padding: 25px;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 40px;
         }
         
@@ -161,28 +250,42 @@
         
         .input-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
+            color: var(--dark);
         }
         
-        .input-group input, .input-group select {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
             font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(110,72,170,0.2);
+            outline: none;
         }
         
         .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-family: 'Tajawal', sans-serif;
             font-weight: bold;
             transition: all 0.3s;
             text-align: center;
+            margin: 5px;
+            font-size: 16px;
+        }
+        
+        .btn i {
+            margin-left: 8px;
         }
         
         .btn-primary {
@@ -193,6 +296,7 @@
         .btn-primary:hover {
             background: var(--secondary);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(110,72,170,0.3);
         }
         
         .btn-success {
@@ -215,6 +319,16 @@
             color: white;
         }
         
+        .btn-discord {
+            background: var(--discord);
+            color: white;
+        }
+        
+        .btn-youtube {
+            background: var(--youtube);
+            color: white;
+        }
+        
         .output-container {
             margin-top: 20px;
             position: relative;
@@ -223,23 +337,30 @@
         textarea {
             width: 100%;
             height: 150px;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
             font-family: monospace;
             resize: vertical;
+            background: #f8f9fa;
         }
         
         .copy-btn {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            background: #607d8b;
+            top: 10px;
+            left: 10px;
+            background: var(--dark);
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary);
         }
         
         /* تنسيقات خاصة بالأدوات */
@@ -249,9 +370,14 @@
             gap: 10px;
             margin: 10px 0;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             background: #f8f9fa;
-            border-radius: 4px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .resource:hover {
+            background: #e9ecef;
         }
         
         .resource input[type="text"] {
@@ -266,9 +392,14 @@
             background: var(--danger);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
+            border-radius: 6px;
+            padding: 8px 12px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .remove-btn:hover {
+            background: #d32f2f;
         }
         
         /* أداة الإنقرامز */
@@ -276,6 +407,28 @@
             display: flex;
             gap: 10px;
             margin: 10px 0;
+        }
+        
+        /* زر ARK Wiki */
+        .wiki-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #4285F4;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        
+        .wiki-btn:hover {
+            background: #3367D6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(66,133,244,0.3);
         }
         
         /* الزر العائم */
@@ -286,10 +439,10 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 25px;
-            padding: 12px 25px;
+            border-radius: 50px;
+            padding: 15px 25px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
             z-index: 1000;
             font-family: 'Tajawal', sans-serif;
             font-size: 16px;
@@ -301,15 +454,20 @@
         }
         
         #statsToolBtn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
         
         /* التكيف مع الشاشات الصغيرة */
         @media (max-width: 768px) {
             .account-container {
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
+            }
+            
+            .account-card {
+                width: 100%;
+                justify-content: center;
             }
             
             .tabs {
@@ -317,7 +475,7 @@
             }
             
             .tab {
-                padding: 10px;
+                padding: 12px;
             }
             
             #statsToolBtn {
@@ -325,38 +483,61 @@
                 transform: translateX(-50%);
                 bottom: 15px;
                 font-size: 14px;
-                padding: 10px 20px;
+                padding: 12px 20px;
             }
             
             .resource, .engram-pattern {
                 flex-direction: column;
                 align-items: stretch;
             }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- شريط الحسابات العلوي -->
+    <!-- شريط الحسابات العلوي المطور -->
     <div class="account-bar">
         <div class="account-container">
-            <div class="account-item">
+            <div class="account-card youtube">
                 <a href="https://www.youtube.com/@ikeira1/featured" target="_blank">
-                    <span class="icon">🎥</span>
-                    <span>قناة اليوتيوب</span>
+                    <div class="account-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="account-text">
+                        <span class="account-title">قناة اليوتيوب</span>
+                        <span class="account-desc">شروحات وتجارب ARK 🎮</span>
+                    </div>
+                    <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
             
-            <div class="account-item">
+            <div class="account-card discord">
                 <a href="https://discord.gg/2rMzBv6zRv" target="_blank">
-                    <span class="icon">💬</span>
-                    <span>سيرفر الديسكورد</span>
+                    <div class="account-icon">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <div class="account-text">
+                        <span class="account-title">سيرفر الديسكورد</span>
+                        <span class="account-desc">انضم لمجتمعنا 💬</span>
+                    </div>
+                    <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
             
-            <div class="account-item">
-                <a href="https://tip.dokan.sa/keira" target="_blank" class="donate-btn">
-                    <span class="icon">❤️</span>
-                    <span>دعم المطور</span>
+            <div class="account-card donate">
+                <a href="https://tip.dokan.sa/keira" target="_blank">
+                    <div class="account-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="account-text">
+                        <span class="account-title">دعم المطور</span>
+                        <span class="account-desc">ساعدنا بالإستمرار ❤️</span>
+                    </div>
+                    <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
         </div>
@@ -364,80 +545,99 @@
     
     <!-- المحتوى الرئيسي -->
     <div class="main-content">
-        <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">أدوات ARK للمحترفين</h1>
+        <h1 style="text-align: center; color: var(--primary); margin-bottom: 20px;">
+            <i class="fas fa-tools"></i> أدوات ARK للمحترفين
+        </h1>
         
         <div class="motivation">
-            "مرحبًا بك في <span class="highlight">أدوات Keira</span>! هنا ستجد كل ما تحتاجه لتخصيص لعبة ARK تمامًا كما تحب. ❤️"
+            "🌟 <span class="highlight">مرحبًا بك في عالم ARK!</span> استخدم هذه الأدوات لتخصيص تجربتك <span class="emoji">🦖</span><br>
+            لا تنسى مشاركة الأدوات مع أصدقائك ودعمنا لتطوير المزيد!"
         </div>
         
         <!-- تبويبات الأدوات -->
         <div class="tabs">
-            <div class="tab active" onclick="showTool('tool1')">توليد اللفلات</div>
-            <div class="tab" onclick="showTool('tool2')">حساب الـ XP</div>
-            <div class="tab" onclick="showTool('tool3')">مولد الإنقرامز</div>
-            <div class="tab" onclick="showTool('tool4')">معدّل الكرافت</div>
+            <div class="tab active" onclick="showTool('tool1')">
+                <i class="fas fa-level-up-alt"></i> توليد اللفلات
+            </div>
+            <div class="tab" onclick="showTool('tool2')">
+                <i class="fas fa-calculator"></i> حساب الـ XP
+            </div>
+            <div class="tab" onclick="showTool('tool3')">
+                <i class="fas fa-star"></i> مولد الإنقرامز
+            </div>
+            <div class="tab" onclick="showTool('tool4')">
+                <i class="fas fa-hammer"></i> معدّل الكرافت
+            </div>
         </div>
         
         <!-- أدوات المحتوى -->
         <div class="tool-container">
             <!-- الأداة 1: توليد اللفلات -->
             <div id="tool1" class="tool active">
-                <h2>توليد كود تجربة اللفلات</h2>
+                <h2><i class="fas fa-level-up-alt"></i> توليد كود تجربة اللفلات</h2>
                 <p>قم بتوليد كود LevelExperienceRampOverrides لمستويات مخصصة</p>
                 
                 <div class="input-group">
-                    <label for="maxLevel">الحد الأقصى لللفل:</label>
+                    <label for="maxLevel"><i class="fas fa-arrow-up"></i> الحد الأقصى لللفل:</label>
                     <input type="number" id="maxLevel" value="100" min="1">
                 </div>
                 
                 <div class="input-group">
-                    <label for="baseXP">نقاط التجربة الأساسية:</label>
+                    <label for="baseXP"><i class="fas fa-bolt"></i> نقاط التجربة الأساسية:</label>
                     <input type="number" id="baseXP" value="5" min="1">
                 </div>
                 
                 <div class="input-group">
-                    <label for="xpMultiplier">مضاعف التجربة:</label>
+                    <label for="xpMultiplier"><i class="fas fa-expand"></i> مضاعف التجربة:</label>
                     <input type="number" id="xpMultiplier" value="1.5" step="0.1" min="0.1">
                 </div>
                 
-                <button class="btn btn-primary" onclick="generateLevels()">توليد الكود</button>
+                <button class="btn btn-primary" onclick="generateLevels()">
+                    <i class="fas fa-magic"></i> توليد الكود
+                </button>
                 
                 <div class="output-container">
                     <textarea id="levelCode" readonly></textarea>
-                    <button class="copy-btn" onclick="copyCode('levelCode')">📋 نسخ الكود</button>
+                    <button class="copy-btn" onclick="copyCode('levelCode')">
+                        <i class="fas fa-copy"></i> نسخ الكود
+                    </button>
                 </div>
             </div>
             
             <!-- الأداة 2: حساب الـ XP الكلي -->
             <div id="tool2" class="tool">
-                <h2>حساب مجموع نقاط التجربة</h2>
+                <h2><i class="fas fa-calculator"></i> حساب مجموع نقاط التجربة</h2>
                 <p>احسب إجمالي نقاط التجربة المطلوبة للوصول إلى مستوى معين</p>
                 
                 <div class="input-group">
-                    <label for="xpCode">أدخل كود LevelExperienceRampOverrides:</label>
+                    <label for="xpCode"><i class="fas fa-code"></i> أدخل كود LevelExperienceRampOverrides:</label>
                     <textarea id="xpCode" placeholder="LevelExperienceRampOverrides=(ExperiencePointsForLevel[0]=5,...)"></textarea>
                 </div>
                 
-                <button class="btn btn-primary" onclick="calculateTotalXP()">حساب المجموع</button>
+                <button class="btn btn-primary" onclick="calculateTotalXP()">
+                    <i class="fas fa-calculator"></i> حساب المجموع
+                </button>
                 
                 <div class="output-container">
                     <textarea id="totalXPOutput" readonly></textarea>
-                    <button class="copy-btn" onclick="copyCode('totalXPOutput')">📋 نسخ الكود</button>
+                    <button class="copy-btn" onclick="copyCode('totalXPOutput')">
+                        <i class="fas fa-copy"></i> نسخ الكود
+                    </button>
                 </div>
             </div>
             
             <!-- الأداة 3: مولد الإنقرامز -->
             <div id="tool3" class="tool">
-                <h2>مولد نقاط الإنقرامز</h2>
+                <h2><i class="fas fa-star"></i> مولد نقاط الإنقرامز</h2>
                 <p>قم بتوليد كود OverridePlayerLevelEngramPoints لمستويات مخصصة</p>
                 
                 <div class="input-group">
-                    <label for="engramMaxLevel">الحد الأقصى لللفل:</label>
+                    <label for="engramMaxLevel"><i class="fas fa-arrow-up"></i> الحد الأقصى لللفل:</label>
                     <input type="number" id="engramMaxLevel" value="100" min="1">
                 </div>
                 
                 <div class="input-group">
-                    <label for="engramPattern">نمط توزيع النقاط:</label>
+                    <label for="engramPattern"><i class="fas fa-project-diagram"></i> نمط توزيع النقاط:</label>
                     <select id="engramPattern">
                         <option value="8,14">8 نقاط حتى 50 ثم 14</option>
                         <option value="10,15">10 نقاط حتى 60 ثم 15</option>
@@ -447,56 +647,72 @@
                 
                 <div id="customPatternContainer" style="display: none;">
                     <div class="input-group">
-                        <label for="customPattern">أدخل النمط المخصص (مثال: 8,8,8,14):</label>
+                        <label for="customPattern"><i class="fas fa-edit"></i> أدخل النمط المخصص (مثال: 8,8,8,14):</label>
                         <input type="text" id="customPattern" placeholder="8,8,8,14">
                     </div>
                 </div>
                 
-                <button class="btn btn-primary" onclick="generateEngrams()">توليد الكود</button>
+                <button class="btn btn-primary" onclick="generateEngrams()">
+                    <i class="fas fa-magic"></i> توليد الكود
+                </button>
                 
                 <div class="output-container">
                     <textarea id="engramCode" readonly></textarea>
-                    <button class="copy-btn" onclick="copyCode('engramCode')">📋 نسخ الكود</button>
+                    <button class="copy-btn" onclick="copyCode('engramCode')">
+                        <i class="fas fa-copy"></i> نسخ الكود
+                    </button>
                 </div>
             </div>
             
             <!-- الأداة 4: معدّل الكرافت -->
             <div id="tool4" class="tool">
-                <h2>معدّل كلفة الكرافت</h2>
+                <h2><i class="fas fa-hammer"></i> معدّل كلفة الكرافت</h2>
                 <p>خصص كلفة صنع أي عنصر في ARK</p>
                 
+                <a href="https://ark.fandom.com/wiki/Item_IDs" target="_blank" class="wiki-btn">
+                    <i class="fas fa-external-link-alt"></i> البحث عن ID العناصر في ARK Wiki
+                </a>
+                
                 <div class="input-group">
-                    <label for="itemClass">ID العنصر المراد تعديله:</label>
+                    <label for="itemClass"><i class="fas fa-cube"></i> ID العنصر المراد تعديله:</label>
                     <input type="text" id="itemClass" placeholder="مثال: SoulTerminal_DS_C">
                 </div>
                 
-                <h3>الموارد المطلوبة:</h3>
+                <h3><i class="fas fa-box-open"></i> الموارد المطلوبة:</h3>
                 <div id="resourcesContainer">
                     <div class="resource">
                         <input type="text" class="resourceId" placeholder="مثال: PrimalItemResource_MetalIngot_C">
                         <input type="number" class="resourceQty" placeholder="الكمية" min="0" step="0.1" value="1">
-                        <button class="remove-btn" onclick="removeResource(this)">🗑️</button>
+                        <button class="remove-btn" onclick="removeResource(this)">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
                     </div>
                 </div>
                 
-                <button class="btn btn-info" onclick="addResource()">➕ إضافة مورد</button>
-                <button class="btn btn-primary" onclick="generateCraftCode()">⚡ توليد الكود</button>
+                <button class="btn btn-info" onclick="addResource()">
+                    <i class="fas fa-plus-circle"></i> إضافة مورد
+                </button>
+                <button class="btn btn-primary" onclick="generateCraftCode()">
+                    <i class="fas fa-magic"></i> توليد الكود
+                </button>
                 
                 <div class="output-container">
                     <textarea id="craftOutput" readonly></textarea>
-                    <button class="copy-btn" onclick="copyCode('craftOutput')">📋 نسخ الكود</button>
+                    <button class="copy-btn" onclick="copyCode('craftOutput')">
+                        <i class="fas fa-copy"></i> نسخ الكود
+                    </button>
                 </div>
             </div>
         </div>
         
         <div class="motivation">
-            "شارك الأدوات مع أصدقائك! دعمك الصغير يساعدنا على تطوير المزيد من الأدوات المفيدة. 🚀"
+            "🎉 <span class="highlight">شارك الأدوات مع أصدقائك!</span> دعمك يعني لنا الكثير وسيساعدنا على تطوير المزيد من الأدوات الرائعة <span class="emoji">🚀</span>"
         </div>
     </div>
     
     <!-- زر أداة الستاتس العائم -->
     <button id="statsToolBtn" onclick="window.open('http://arksurvivalevolved.gamewalkthrough-universe.com/dedicatedservers/customizationtools/perlevelstatsmultipliertool/Default.aspx', '_blank')">
-        📊 أداة الستاتس
+        <i class="fas fa-chart-line"></i> أداة الستاتس
     </button>
     
     <script>
@@ -629,7 +845,9 @@
             newResource.innerHTML = `
                 <input type="text" class="resourceId" placeholder="مثال: PrimalItemResource_MetalIngot_C">
                 <input type="number" class="resourceQty" placeholder="الكمية" min="0" step="0.1" value="1">
-                <button class="remove-btn" onclick="removeResource(this)">🗑️</button>
+                <button class="remove-btn" onclick="removeResource(this)">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
             `;
             container.appendChild(newResource);
         }
@@ -673,13 +891,24 @@
             const code = document.getElementById(elementId);
             code.select();
             document.execCommand("copy");
-            alert("تم نسخ الكود!");
+            
+            // تغيير نص الزر مؤقتًا
+            const btn = code.nextElementSibling;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
         }
         
         // تهيئة الصفحة
         document.addEventListener("DOMContentLoaded", function() {
             // إضافة مورد افتراضي لأداة الكرافت
             addResource();
+            
+            // إضافة مستمع حدث للنمط المخصص في أداة الإنقرامز
+            document.getElementById("engramPattern").dispatchEvent(new Event('change'));
         });
     </script>
 </body>
